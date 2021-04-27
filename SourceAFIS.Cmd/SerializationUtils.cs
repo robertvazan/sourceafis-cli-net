@@ -1,6 +1,5 @@
-// Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
+// Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;

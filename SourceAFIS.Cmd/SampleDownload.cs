@@ -1,4 +1,4 @@
-// Part of SourceAFIS for .NET: https://sourceafis.machinezoo.com/net
+// Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System;
 using System.IO;
 using System.IO.Compression;
