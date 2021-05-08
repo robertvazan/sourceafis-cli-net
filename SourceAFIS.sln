@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Cmd", "SourceAFIS.Cmd\SourceAFIS.Cmd.csproj", "{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceAFIS.Cli", "SourceAFIS.Cli\SourceAFIS.Cli.csproj", "{B6BBA755-4A69-4A6C-90CA-1B8A6F4F4AF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

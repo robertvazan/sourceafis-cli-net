@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Serilog;
 
-namespace SourceAFIS.Cmd
+namespace SourceAFIS.Cli
 {
     class TransparencyStats
     {

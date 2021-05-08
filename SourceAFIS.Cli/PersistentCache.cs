@@ -5,7 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using Serilog;
 
-namespace SourceAFIS.Cmd
+namespace SourceAFIS.Cli
 {
     class PersistentCache
     {

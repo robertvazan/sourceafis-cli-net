@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DirectoryApi = System.IO.Directory;
 
-namespace SourceAFIS.Cmd
+namespace SourceAFIS.Cli
 {
     class SampleLayout
     {

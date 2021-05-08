@@ -2,7 +2,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace SourceAFIS.Cmd
+namespace SourceAFIS.Cli
 {
     class DataHash
     {

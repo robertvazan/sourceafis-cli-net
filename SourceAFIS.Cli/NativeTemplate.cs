@@ -1,6 +1,6 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 
-namespace SourceAFIS.Cmd
+namespace SourceAFIS.Cli
 {
 	class NativeTemplate
 	{

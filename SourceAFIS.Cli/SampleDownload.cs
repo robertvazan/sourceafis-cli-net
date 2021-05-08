@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading;
 using Serilog;
 
-namespace SourceAFIS.Cmd
+namespace SourceAFIS.Cli
 {
     static class SampleDownload
     {

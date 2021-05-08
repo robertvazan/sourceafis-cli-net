@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Title>SourceAFIS for .NET CLI</Title>
+    <Title>SourceAFIS CLI for .NET</Title>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SourceAFIS" Version="3.13.0" />

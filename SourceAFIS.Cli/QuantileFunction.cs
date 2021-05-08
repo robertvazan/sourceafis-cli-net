@@ -1,7 +1,7 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System.Collections.Generic;
 
-namespace SourceAFIS.Cmd
+namespace SourceAFIS.Cli
 {
     class QuantileFunction
     {

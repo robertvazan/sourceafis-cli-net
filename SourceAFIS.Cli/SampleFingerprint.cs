@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using PathApi = System.IO.Path;
 
-namespace SourceAFIS.Cmd
+namespace SourceAFIS.Cli
 {
     class SampleFingerprint
     {
