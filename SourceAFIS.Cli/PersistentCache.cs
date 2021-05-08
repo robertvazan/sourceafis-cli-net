@@ -4,20 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using Serilog;
+using SourceAFIS.Cli.Config;
 
 namespace SourceAFIS.Cli
 {
     class PersistentCache
     {
-        public static readonly string Home = Path.GetFullPath(".cache");
-        public static readonly string Output = Path.Combine(Home, "net", FingerprintCompatibility.Version);
-
-        static PersistentCache()
-        {
-            Log.Information("Cache directory: {Dir}", Home);
-            Log.Information("Library version: {Version}", FingerprintCompatibility.Version);
-        }
-
         interface ISerialization
         {
             string Rename(string path);
@@ -90,7 +82,7 @@ namespace SourceAFIS.Cli
         {
             var serialization = Serialization<T>();
             var compression = Compression(serialization.Rename(identity));
-            var path = compression.Rename(serialization.Rename(Path.Combine(Output, category, identity)));
+            var path = compression.Rename(serialization.Rename(Path.Combine(Configuration.Output, category, identity)));
             if (File.Exists(path))
                 return serialization.Deserialize<T>(compression.Decompress(File.ReadAllBytes(path)));
             lock (Reported)

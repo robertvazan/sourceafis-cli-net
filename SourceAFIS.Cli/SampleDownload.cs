@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Net;
 using System.Threading;
 using Serilog;
+using SourceAFIS.Cli.Config;
 
 namespace SourceAFIS.Cli
 {
@@ -147,7 +148,7 @@ namespace SourceAFIS.Cli
                 default:
                     throw new ArgumentException();
             }
-            return Path.Combine(PersistentCache.Home, name, dataset);
+            return Path.Combine(Configuration.Home, name, dataset);
         }
         static int Reported;
         public static string Unpack(string dataset, Format format)
