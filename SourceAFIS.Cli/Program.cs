@@ -1,5 +1,8 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using Serilog;
+using SourceAFIS.Cli.Benchmarks;
+using SourceAFIS.Cli.Config;
+using SourceAFIS.Cli.Utils.Args;
 
 namespace SourceAFIS.Cli
 {
@@ -10,13 +13,13 @@ namespace SourceAFIS.Cli
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console(outputTemplate: "{Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
+            var parser = new CommandParser()
+                .Add(new NormalizationOption())
+                .Add(new FootprintBenchmark());
             if (args.Length < 1)
                 return;
             switch (args[0])
             {
-                case "footprint":
-                    TemplateFootprint.Report();
-                    break;
                 case "accuracy":
                     ScalarAccuracy.Report();
                     break;
