@@ -1,4 +1,5 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
+using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli
 {
@@ -6,7 +7,7 @@ namespace SourceAFIS.Cli
 	{
 		public static byte[] Serialized(SampleFingerprint fp)
 		{
-			return PersistentCache.Get("templates", fp.Path + ".cbor", () =>
+			return Cache.Get("templates", fp.Path + ".cbor", () =>
 			{
 				return new FingerprintTemplate(fp.Decode()).ToByteArray();
 			});

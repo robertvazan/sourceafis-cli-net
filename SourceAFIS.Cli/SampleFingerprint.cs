@@ -12,9 +12,9 @@ namespace SourceAFIS.Cli
 {
     class SampleFingerprint
     {
-        public readonly SampleDataset Dataset;
+        public readonly Dataset Dataset;
         public readonly int Id;
-        public SampleFingerprint(SampleDataset dataset, int id)
+        public SampleFingerprint(Dataset dataset, int id)
         {
             Dataset = dataset;
             Id = id;
@@ -22,7 +22,7 @@ namespace SourceAFIS.Cli
         public string Name { get { return Dataset.Layout.Name(Id); } }
         public string Path { get { return PathApi.Combine(Dataset.Path, Name); } }
         public SampleFinger Finger { get { return new SampleFinger(Dataset, Dataset.Layout.Finger(Id)); } }
-        public static List<SampleFingerprint> All { get { return SampleDataset.All.SelectMany(ds => ds.Fingerprints).ToList(); } }
+        public static List<SampleFingerprint> All { get { return Dataset.All.SelectMany(ds => ds.Fingerprints).ToList(); } }
         public byte[] Load() { return File.ReadAllBytes(PathApi.Combine(Dataset.Layout.Directory, Dataset.Layout.Filename(Id))); }
         public FingerprintImage Decode()
         {

@@ -1,9 +1,9 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Serilog;
 using SourceAFIS.Cli.Utils.Args;
+using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Benchmarks
 {
@@ -13,7 +13,7 @@ namespace SourceAFIS.Cli.Benchmarks
         public override string Description => "Measure template footprint.";
         public static FootprintStats Measure(SampleFingerprint fp)
         {
-            return PersistentCache.Get(Path.Combine("benchmarks", "footprint"), fp.Path, () =>
+            return Cache.Get(Path.Combine("benchmarks", "footprint"), fp.Path, () =>
             {
                 var footprint = new FootprintStats();
                 var serialized = NativeTemplate.Serialized(fp);

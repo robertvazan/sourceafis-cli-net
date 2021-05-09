@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Serilog;
+using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli
 {
@@ -88,7 +89,7 @@ namespace SourceAFIS.Cli
         }
         public static Table ExtractorTable(SampleFingerprint fp)
         {
-            return PersistentCache.Get<Table>("extractor-transparency-stats", fp.Path, () =>
+            return Cache.Get<Table>("extractor-transparency-stats", fp.Path, () =>
             {
                 using (var collector = new TableCollector())
                 {

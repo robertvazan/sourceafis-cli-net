@@ -1,13 +1,14 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System.Linq;
+using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli
 {
     class ScoreTable
     {
-        public static double[][] Of(SampleDataset dataset)
+        public static double[][] Of(Dataset dataset)
         {
-            return PersistentCache.Get("scores", dataset.Path, () =>
+            return Cache.Get("scores", dataset.Path, () =>
             {
                 var fingerprints = dataset.Fingerprints;
                 var templates = fingerprints.Select(fp => NativeTemplate.Of(fp)).ToList();

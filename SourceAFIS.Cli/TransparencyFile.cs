@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli
 {
@@ -30,7 +31,7 @@ namespace SourceAFIS.Cli
         static string ExtractorPath(string key, SampleFingerprint fp) { return fp.Path + Extension(TransparencyStats.ExtractorRow(fp, key).Mime); }
         public static byte[] Extractor(string key, SampleFingerprint fp)
         {
-            return PersistentCache.Get(Path.Combine("extractor-transparency-files", key), ExtractorPath(key, fp), () =>
+            return Cache.Get(Path.Combine("extractor-transparency-files", key), ExtractorPath(key, fp), () =>
             {
                 using (var collector = new FileCollector(key))
                 {
@@ -46,7 +47,7 @@ namespace SourceAFIS.Cli
         }
         public static byte[] ExtractorNormalized(string key, SampleFingerprint fp)
         {
-            return PersistentCache.Get(Path.Combine("normalized-extractor-transparency-files", key), ExtractorPath(key, fp), () =>
+            return Cache.Get(Path.Combine("normalized-extractor-transparency-files", key), ExtractorPath(key, fp), () =>
             {
                 return SerializationUtils.Normalize(TransparencyStats.ExtractorRow(fp, key).Mime, Extractor(key, fp));
             });

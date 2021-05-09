@@ -11,7 +11,7 @@ namespace SourceAFIS.Cli
             public double[] Nonmatching;
             public double[] Selfmatching;
         }
-        public static Trio Of(SampleDataset dataset)
+        public static Trio Of(Dataset dataset)
         {
             var fingerprints = dataset.Fingerprints;
             var scores = ScoreTable.Of(dataset);

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SourceAFIS.Cli
 {
-    class SampleDataset
+    class Dataset
     {
         public readonly String Name;
         public readonly SampleDownload.Format Format;
@@ -24,17 +24,17 @@ namespace SourceAFIS.Cli
                     return 500;
             }
         }
-        SampleDataset(string name, SampleDownload.Format format)
+        Dataset(string name, SampleDownload.Format format)
         {
             Name = name;
             Format = format;
             Dpi = LookupDpi(name);
             Layout = new SampleLayout(SampleDownload.Unpack(name, format));
         }
-        static readonly ConcurrentDictionary<Tuple<string, SampleDownload.Format>, SampleDataset> Cache = new ConcurrentDictionary<Tuple<string, SampleDownload.Format>, SampleDataset>();
-        public static SampleDataset Get(string name, SampleDownload.Format format) { return Cache.GetOrAdd(Tuple.Create(name, format), t => new SampleDataset(t.Item1, t.Item2)); }
-        public static List<SampleDataset> AllInFormat(SampleDownload.Format format) { return SampleDownload.Available.Select(n => Get(n, format)).ToList(); }
-        public static List<SampleDataset> All { get { return AllInFormat(SampleDownload.DefaultFormat); } }
+        static readonly ConcurrentDictionary<Tuple<string, SampleDownload.Format>, Dataset> Cache = new ConcurrentDictionary<Tuple<string, SampleDownload.Format>, Dataset>();
+        public static Dataset Get(string name, SampleDownload.Format format) { return Cache.GetOrAdd(Tuple.Create(name, format), t => new Dataset(t.Item1, t.Item2)); }
+        public static List<Dataset> AllInFormat(SampleDownload.Format format) { return SampleDownload.Available.Select(n => Get(n, format)).ToList(); }
+        public static List<Dataset> All { get { return AllInFormat(SampleDownload.DefaultFormat); } }
         public List<SampleFingerprint> Fingerprints { get { return Enumerable.Range(0, Layout.Fingerprints).Select(n => new SampleFingerprint(this, n)).ToList(); } }
         public string Path { get { return Name; } }
     }

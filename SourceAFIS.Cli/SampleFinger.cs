@@ -4,9 +4,9 @@ namespace SourceAFIS.Cli
 {
     class SampleFinger
     {
-        public readonly SampleDataset Dataset;
+        public readonly Dataset Dataset;
         public readonly int Id;
-        public SampleFinger(SampleDataset dataset, int id)
+        public SampleFinger(Dataset dataset, int id)
         {
             Dataset = dataset;
             Id = id;

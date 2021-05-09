@@ -1,5 +1,6 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using Serilog;
+using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli
 {
@@ -9,9 +10,9 @@ namespace SourceAFIS.Cli
         public double Fmr100;
         public double Fmr1K;
         public double Fmr10K;
-        public static ScalarAccuracy Of(SampleDataset dataset)
+        public static ScalarAccuracy Of(Dataset dataset)
         {
-            return PersistentCache.Get("accuracy", dataset.Path, () =>
+            return Cache.Get("accuracy", dataset.Path, () =>
             {
                 var trio = QuantileFunction.Of(dataset);
                 var accuracy = new ScalarAccuracy();
@@ -25,8 +26,8 @@ namespace SourceAFIS.Cli
         public static ScalarAccuracy Average()
         {
             var average = new ScalarAccuracy();
-            int count = SampleDataset.All.Count;
-            foreach (var dataset in SampleDataset.All)
+            int count = Dataset.All.Count;
+            foreach (var dataset in Dataset.All)
             {
                 var accuracy = Of(dataset);
                 average.Eer += accuracy.Eer / count;
@@ -43,7 +44,7 @@ namespace SourceAFIS.Cli
         }
         public static void Report()
         {
-            foreach (var dataset in SampleDataset.All)
+            foreach (var dataset in Dataset.All)
                 Report(dataset.Name, Of(dataset));
             Report("average", Average());
         }
