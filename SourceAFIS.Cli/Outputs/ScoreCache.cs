@@ -3,16 +3,16 @@ using System.Linq;
 using SourceAFIS.Cli.Datasets;
 using SourceAFIS.Cli.Utils.Caching;
 
-namespace SourceAFIS.Cli
+namespace SourceAFIS.Cli.Outputs
 {
-    class ScoreTable
+    class ScoreCache
     {
-        public static double[][] Of(Dataset dataset)
+        public static double[][] Load(Dataset dataset)
         {
             return Cache.Get("scores", dataset.Path, () =>
             {
                 var fingerprints = dataset.Fingerprints;
-                var templates = fingerprints.Select(fp => NativeTemplate.Of(fp)).ToList();
+                var templates = fingerprints.Select(fp => TemplateCache.Deserialize(fp)).ToList();
                 var scores = new double[fingerprints.Length][];
                 foreach (var probe in fingerprints)
                 {

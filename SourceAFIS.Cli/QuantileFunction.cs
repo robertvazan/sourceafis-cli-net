@@ -1,6 +1,7 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System.Collections.Generic;
 using SourceAFIS.Cli.Datasets;
+using SourceAFIS.Cli.Outputs;
 
 namespace SourceAFIS.Cli
 {
@@ -15,7 +16,7 @@ namespace SourceAFIS.Cli
         public static Trio Of(Dataset dataset)
         {
             var fingerprints = dataset.Fingerprints;
-            var scores = ScoreTable.Of(dataset);
+            var scores = ScoreCache.Load(dataset);
             var matching = new List<double>();
             var nonmatching = new List<double>();
             var selfmatching = new List<double>();

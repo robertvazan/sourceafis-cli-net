@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Serilog;
 using SourceAFIS.Cli.Datasets;
+using SourceAFIS.Cli.Outputs;
 using SourceAFIS.Cli.Utils.Args;
 using SourceAFIS.Cli.Utils.Caching;
 
@@ -17,7 +18,7 @@ namespace SourceAFIS.Cli.Benchmarks
             return Cache.Get(Path.Combine("benchmarks", "footprint"), fp.Path, () =>
             {
                 var footprint = new FootprintStats();
-                var serialized = NativeTemplate.Serialized(fp);
+                var serialized = TemplateCache.Load(fp);
                 footprint.Count = 1;
                 footprint.Serialized = serialized.Length;
                 return footprint;
