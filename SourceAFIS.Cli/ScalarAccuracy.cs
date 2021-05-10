@@ -27,7 +27,7 @@ namespace SourceAFIS.Cli
         public static ScalarAccuracy Average()
         {
             var average = new ScalarAccuracy();
-            int count = Dataset.All.Count;
+            int count = Dataset.All.Length;
             foreach (var dataset in Dataset.All)
             {
                 var accuracy = Of(dataset);

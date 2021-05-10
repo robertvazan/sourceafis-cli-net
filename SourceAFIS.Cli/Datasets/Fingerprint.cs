@@ -6,7 +6,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using PathApi = System.IO.Path;
 
 namespace SourceAFIS.Cli.Datasets
 {
@@ -25,10 +24,10 @@ namespace SourceAFIS.Cli.Datasets
         public static bool operator !=(Fingerprint left, Fingerprint right) => !left.Equals(right);
         public override int GetHashCode() => 31 * Dataset.GetHashCode() + Id;
         public string Name => Dataset.Layout.Name(Id);
-        public string Path => PathApi.Combine(Dataset.Path, Name);
+        public string Path => System.IO.Path.Combine(Dataset.Path, Name);
         public Finger Finger => new Finger(Dataset, Dataset.Layout.Finger(Id));
-        public static List<Fingerprint> All => Dataset.All.SelectMany(ds => ds.Fingerprints).ToList();
-        public byte[] Load() => File.ReadAllBytes(PathApi.Combine(Dataset.Layout.Directory, Dataset.Layout.Filename(Id)));
+        public static Fingerprint[] All => Dataset.All.SelectMany(ds => ds.Fingerprints).ToArray();
+        public byte[] Load() => File.ReadAllBytes(System.IO.Path.Combine(Dataset.Layout.Directory, Dataset.Layout.Filename(Id)));
         public FingerprintImage Decode()
         {
             if (Dataset.Format == ImageFormat.Gray)

@@ -13,11 +13,11 @@ namespace SourceAFIS.Cli
             {
                 var fingerprints = dataset.Fingerprints;
                 var templates = fingerprints.Select(fp => NativeTemplate.Of(fp)).ToList();
-                var scores = new double[fingerprints.Count][];
+                var scores = new double[fingerprints.Length][];
                 foreach (var probe in fingerprints)
                 {
                     var matcher = new FingerprintMatcher(templates[probe.Id]);
-                    scores[probe.Id] = new double[fingerprints.Count];
+                    scores[probe.Id] = new double[fingerprints.Length];
                     foreach (var candidate in fingerprints)
                         scores[probe.Id][candidate.Id] = matcher.Match(templates[candidate.Id]);
                 }
