@@ -24,14 +24,14 @@ namespace SourceAFIS.Cli
             stats.Size = data.Length;
             var normalized = Serializer.Normalize(mime, data);
             stats.SizeNormalized = normalized.Length;
-            stats.Hash = DataHash.Of(normalized);
+            stats.Hash = Hasher.Of(normalized);
             return stats;
         }
         public static TransparencyStats Sum(List<TransparencyStats> list)
         {
             var sum = new TransparencyStats();
             sum.Mime = list[0].Mime;
-            var hash = new DataHash();
+            var hash = new Hasher();
             foreach (var stats in list)
             {
                 sum.Count += stats.Count;
@@ -108,7 +108,7 @@ namespace SourceAFIS.Cli
             {
                 var stats = row.Stats;
                 Log.Information("Transparency/{Key}: {Mime}, {Count}x, {Size} B (normalized {SizeNormalized} B), hash {Hash}",
-                    row.Key, stats.Mime, stats.Count, stats.Size / stats.Count, stats.SizeNormalized / stats.Count, DataHash.Format(stats.Hash));
+                    row.Key, stats.Mime, stats.Count, stats.Size / stats.Count, stats.SizeNormalized / stats.Count, Pretty.Hash(stats.Hash));
             }
         }
     }
