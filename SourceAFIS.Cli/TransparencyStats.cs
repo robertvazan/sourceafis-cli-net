@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Serilog;
+using SourceAFIS.Cli.Datasets;
 using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli
@@ -87,7 +88,7 @@ namespace SourceAFIS.Cli
             public override void Take(string key, string mime, byte[] data) { Records.Add(Table.Of(key, mime, data)); }
             public Table Sum() { return Table.Sum(Records); }
         }
-        public static Table ExtractorTable(SampleFingerprint fp)
+        public static Table ExtractorTable(Fingerprint fp)
         {
             return Cache.Get<Table>("extractor-transparency-stats", fp.Path, () =>
             {
@@ -98,8 +99,8 @@ namespace SourceAFIS.Cli
                 }
             });
         }
-        public static TransparencyStats ExtractorRow(SampleFingerprint fp, String key) { return ExtractorTable(fp).Rows.Where(r => r.Key == key).First().Stats; }
-        public static Table ExtractorTable() { return Table.Sum(SampleFingerprint.All.Select(fp => ExtractorTable(fp)).ToList()); }
+        public static TransparencyStats ExtractorRow(Fingerprint fp, String key) { return ExtractorTable(fp).Rows.Where(r => r.Key == key).First().Stats; }
+        public static Table ExtractorTable() { return Table.Sum(Fingerprint.All.Select(fp => ExtractorTable(fp)).ToList()); }
         public static void Report(Table table)
         {
             foreach (var row in table.Rows)

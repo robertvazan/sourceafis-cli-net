@@ -1,5 +1,6 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using Serilog;
+using SourceAFIS.Cli.Datasets;
 using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli

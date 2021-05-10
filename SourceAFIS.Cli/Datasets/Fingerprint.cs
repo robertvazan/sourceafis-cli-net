@@ -8,32 +8,37 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using PathApi = System.IO.Path;
 
-namespace SourceAFIS.Cli
+namespace SourceAFIS.Cli.Datasets
 {
-    class SampleFingerprint
+    readonly struct Fingerprint : IEquatable<Fingerprint>
     {
         public readonly Dataset Dataset;
         public readonly int Id;
-        public SampleFingerprint(Dataset dataset, int id)
+        public Fingerprint(Dataset dataset, int id)
         {
             Dataset = dataset;
             Id = id;
         }
-        public string Name { get { return Dataset.Layout.Name(Id); } }
-        public string Path { get { return PathApi.Combine(Dataset.Path, Name); } }
-        public SampleFinger Finger { get { return new SampleFinger(Dataset, Dataset.Layout.Finger(Id)); } }
-        public static List<SampleFingerprint> All { get { return Dataset.All.SelectMany(ds => ds.Fingerprints).ToList(); } }
-        public byte[] Load() { return File.ReadAllBytes(PathApi.Combine(Dataset.Layout.Directory, Dataset.Layout.Filename(Id))); }
+        public bool Equals(Fingerprint other) => Dataset == other.Dataset && Id == other.Id;
+        public override bool Equals(object other) => other is Fingerprint && Equals((Fingerprint)other);
+        public static bool operator ==(Fingerprint left, Fingerprint right) => left.Equals(right);
+        public static bool operator !=(Fingerprint left, Fingerprint right) => !left.Equals(right);
+        public override int GetHashCode() => 31 * Dataset.GetHashCode() + Id;
+        public string Name => Dataset.Layout.Name(Id);
+        public string Path => PathApi.Combine(Dataset.Path, Name);
+        public Finger Finger => new Finger(Dataset, Dataset.Layout.Finger(Id));
+        public static List<Fingerprint> All => Dataset.All.SelectMany(ds => ds.Fingerprints).ToList();
+        public byte[] Load() => File.ReadAllBytes(PathApi.Combine(Dataset.Layout.Directory, Dataset.Layout.Filename(Id)));
         public FingerprintImage Decode()
         {
-            if (Dataset.Format == SampleDownload.Format.Gray)
+            if (Dataset.Format == ImageFormat.Gray)
             {
                 var gray = Load();
                 int width = (gray[0] << 8) | gray[1];
                 int height = (gray[2] << 8) | gray[3];
                 var pixels = new byte[gray.Length - 4];
                 Array.Copy(gray, 4, pixels, 0, pixels.Length);
-                return new FingerprintImage(width, height, pixels, new FingerprintImageOptions() { Dpi = Dataset.Dpi });
+                return new FingerprintImage(width, height, pixels, new FingerprintImageOptions() { Dpi = Dataset.Sample.Dpi() });
             }
             else
             {
@@ -64,7 +69,7 @@ namespace SourceAFIS.Cli
                             {
                                 bitmap.UnlockBits(locked);
                             }
-                            return new FingerprintImage(bitmap.Width, bitmap.Height, grayscale, new FingerprintImageOptions() { Dpi = Dataset.Dpi });
+                            return new FingerprintImage(bitmap.Width, bitmap.Height, grayscale, new FingerprintImageOptions() { Dpi = Dataset.Sample.Dpi() });
                         }
                     }
                 }

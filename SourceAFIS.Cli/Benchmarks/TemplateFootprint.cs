@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Serilog;
+using SourceAFIS.Cli.Datasets;
 using SourceAFIS.Cli.Utils.Args;
 using SourceAFIS.Cli.Utils.Caching;
 
@@ -11,7 +12,7 @@ namespace SourceAFIS.Cli.Benchmarks
     {
         public override string[] Subcommand => new[] { "benchmark", "footprint" };
         public override string Description => "Measure template footprint.";
-        public static FootprintStats Measure(SampleFingerprint fp)
+        public static FootprintStats Measure(Fingerprint fp)
         {
             return Cache.Get(Path.Combine("benchmarks", "footprint"), fp.Path, () =>
             {
@@ -22,7 +23,7 @@ namespace SourceAFIS.Cli.Benchmarks
                 return footprint;
             });
         }
-        public static FootprintStats Sum() { return FootprintStats.Sum(SampleFingerprint.All.Select(fp => Measure(fp)).ToList()); }
+        public static FootprintStats Sum() { return FootprintStats.Sum(Fingerprint.All.Select(fp => Measure(fp)).ToList()); }
         public override void Run()
         {
             var sum = Sum();

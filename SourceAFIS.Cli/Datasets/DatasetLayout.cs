@@ -1,14 +1,15 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DirectoryApi = System.IO.Directory;
 
-namespace SourceAFIS.Cli
+namespace SourceAFIS.Cli.Datasets
 {
-    class SampleLayout
+    class DatasetLayout
     {
         public readonly string Directory;
         readonly int[] OffsetArray;
@@ -16,22 +17,22 @@ namespace SourceAFIS.Cli
         readonly String[] NameArray;
         readonly String[] FilenameArray;
         readonly String[] PrefixArray;
-        public int Fingers { get { return OffsetArray.Length - 1; } }
-        public int Impressions(int finger) { return OffsetArray[finger + 1] - OffsetArray[finger]; }
-        public int Fingerprints { get { return FingerArray.Length; } }
+        public int Fingers => OffsetArray.Length - 1;
+        public int Impressions(int finger) => OffsetArray[finger + 1] - OffsetArray[finger];
+        public int Fingerprints => FingerArray.Length;
         public int Fingerprint(int finger, int impression)
         {
             if (impression < 0 || impression >= Impressions(finger))
                 throw new ArgumentOutOfRangeException();
             return OffsetArray[finger] + impression;
         }
-        public int Finger(int fp) { return FingerArray[fp]; }
-        public int Impression(int fp) { return fp - OffsetArray[Finger(fp)]; }
-        public string Name(int fp) { return NameArray[fp]; }
-        public string Filename(int fp) { return FilenameArray[fp]; }
-        public string Prefix(int finger) { return PrefixArray[finger]; }
+        public int Finger(int fp) => FingerArray[fp];
+        public int Impression(int fp) => fp - OffsetArray[Finger(fp)];
+        public string Name(int fp) => NameArray[fp];
+        public string Filename(int fp) => FilenameArray[fp];
+        public string Prefix(int finger) => PrefixArray[finger];
         static readonly Regex Pattern = new Regex(@"^(.+)_[0-9]+\.(?:tif|tiff|png|bmp|jpg|jpeg|wsq|gray)$");
-        public SampleLayout(string directory)
+        public DatasetLayout(string directory)
         {
             Directory = directory;
             var groups = new Dictionary<string, List<string>>();
@@ -74,5 +75,7 @@ namespace SourceAFIS.Cli
                 ++finger;
             }
         }
+        static readonly ConcurrentDictionary<Dataset, DatasetLayout> All = new ConcurrentDictionary<Dataset, DatasetLayout>();
+        public static DatasetLayout Get(Dataset dataset) => All.GetOrAdd(dataset, ds => new DatasetLayout(Download.Unpack(dataset)));
     }
 }
