@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Serilog;
 using SourceAFIS.Cli.Datasets;
+using SourceAFIS.Cli.Utils;
 using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli
@@ -21,7 +22,7 @@ namespace SourceAFIS.Cli
             stats.Mime = mime;
             stats.Count = 1;
             stats.Size = data.Length;
-            var normalized = SerializationUtils.Normalize(mime, data);
+            var normalized = Serializer.Normalize(mime, data);
             stats.SizeNormalized = normalized.Length;
             stats.Hash = DataHash.Of(normalized);
             return stats;

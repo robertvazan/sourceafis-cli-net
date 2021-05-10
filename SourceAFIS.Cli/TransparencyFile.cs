@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using SourceAFIS.Cli.Datasets;
+using SourceAFIS.Cli.Utils;
 using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli
@@ -50,7 +51,7 @@ namespace SourceAFIS.Cli
         {
             return Cache.Get(Path.Combine("normalized-extractor-transparency-files", key), ExtractorPath(key, fp), () =>
             {
-                return SerializationUtils.Normalize(TransparencyStats.ExtractorRow(fp, key).Mime, Extractor(key, fp));
+                return Serializer.Normalize(TransparencyStats.ExtractorRow(fp, key).Mime, Extractor(key, fp));
             });
         }
         public static void ExtractorNormalized(string key)

@@ -12,9 +12,9 @@ using Dahomey.Cbor.Serialization.Conventions;
 using Dahomey.Cbor.Serialization.Converters.Mappings;
 using Dahomey.Cbor.Util;
 
-namespace SourceAFIS.Cli
+namespace SourceAFIS.Cli.Utils
 {
-    static class SerializationUtils
+    static class Serializer
     {
         // Conventions consistent with Java.
         class ConsistentConvention : IObjectMappingConvention
@@ -42,7 +42,7 @@ namespace SourceAFIS.Cli
             public IObjectMappingConvention GetConvention(Type type) { return new ConsistentConvention(); }
         }
         static readonly CborOptions Options = new CborOptions();
-        static SerializationUtils()
+        static Serializer()
         {
             Options.Registry.ObjectMappingConventionRegistry.RegisterProvider(new ConsistentConventionProvider());
         }
@@ -54,28 +54,16 @@ namespace SourceAFIS.Cli
                 return buffer.WrittenSpan.ToArray();
             }
         }
-        public static T Deserialize<T>(byte[] bytes) { return Cbor.Deserialize<T>(bytes, Options); }
-        static byte[] ToBytes(int number)
+        public static T Deserialize<T>(byte[] bytes) => Cbor.Deserialize<T>(bytes, Options);
+        static byte[] ReverseBytes(byte[] bytes)
         {
-            var bytes = BitConverter.GetBytes(number);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
             return bytes;
         }
-        static byte[] ToBytes(long number)
-        {
-            var bytes = BitConverter.GetBytes(number);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(bytes);
-            return bytes;
-        }
-        static byte[] ToBytes(double number)
-        {
-            var bytes = BitConverter.GetBytes(number);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(bytes);
-            return bytes;
-        }
+        static byte[] ToBytes(int number) => ReverseBytes(BitConverter.GetBytes(number));
+        static byte[] ToBytes(long number) => ReverseBytes(BitConverter.GetBytes(number));
+        static byte[] ToBytes(double number) => ReverseBytes(BitConverter.GetBytes(number));
         static void Normalize(Stream stream, CborValue node)
         {
             switch (node.Type)
