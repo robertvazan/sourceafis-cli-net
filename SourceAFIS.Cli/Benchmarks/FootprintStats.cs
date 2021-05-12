@@ -9,7 +9,7 @@ namespace SourceAFIS.Cli.Benchmarks
         public double Serialized;
         public double Memory;
         public double Minutiae;
-        public static FootprintStats Sum(List<FootprintStats> list)
+        public static FootprintStats Sum(IEnumerable<FootprintStats> list)
         {
             var sum = new FootprintStats();
             foreach (var stats in list)

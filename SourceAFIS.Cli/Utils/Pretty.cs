@@ -1,10 +1,137 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System;
+using System.Collections.Generic;
+using Serilog;
+using SourceAFIS.Cli.Config;
 
 namespace SourceAFIS.Cli.Utils
 {
     class Pretty
     {
-        public static string Hash(byte[] data) => Convert.ToBase64String(data).TrimEnd(new[] { '=' }).Replace('+', '-').Replace('/', '_');
+        public static void Print(string text)
+        {
+            if (text.EndsWith("\n"))
+                text = text.Substring(text.Length - 1);
+            foreach (var line in text.Split('\n'))
+                Log.Information("{Line}", line);
+        }
+        static string Tag(params string[] tag)
+        {
+            if (tag.Length == 0)
+                throw new ArgumentException();
+            return String.Join("/", tag);
+        }
+        static readonly Dictionary<string, string> Hashes = new Dictionary<string, string>();
+        public static string Hash(byte[] hash, params string[] tag)
+        {
+            if (tag.Length == 0)
+                return Convert.ToBase64String(hash).TrimEnd(new[] { '=' }).Replace('+', '-').Replace('/', '_').Substring(0, 8);
+            else if (Configuration.BaselineMode)
+            {
+                var formatted = Hash(hash);
+                Hashes[Tag(tag)] = formatted;
+                return formatted;
+            }
+            else
+            {
+                string baseline;
+                var current = Hash(hash);
+                if (!Hashes.TryGetValue(Tag(tag), out baseline))
+                    return current;
+                else if (baseline == current)
+                    return current + " (=)";
+                else
+                    return current + " (CHANGE)";
+            }
+        }
+        static string Percents(double value)
+        {
+            double scaled = 100 * value;
+            double abs = Math.Abs(scaled);
+            if (abs < 1)
+                return string.Format("{0:F3}%%", scaled);
+            if (abs < 10)
+                return string.Format("{0:F2}%%", scaled);
+            return string.Format("{0:F1}%%", scaled);
+        }
+        public static string Factor(double value)
+        {
+            if (value >= 100)
+                return string.Format("{0:F0}x", value);
+            if (value >= 10)
+                return string.Format("{0:F1}x", value);
+            if (value >= 2)
+                return string.Format("{0:F2}x", value);
+            return Percents(value - 1);
+        }
+        static string Change(double value, double baseline, string more, string less)
+        {
+            if (value == baseline)
+                return "=";
+            bool positive = value >= baseline;
+            var change = Factor(positive ? value / baseline : baseline / value);
+            if (change == Factor(1))
+                return "~";
+            return change + " " + (positive ? more : less);
+        }
+        static readonly Dictionary<string, double> measurements = new Dictionary<string, double>();
+        static string Measurement(double value, string formatted, string more, string less, params string[] tag)
+        {
+            if (tag.Length == 0)
+                return formatted;
+            else if (Configuration.BaselineMode)
+            {
+                measurements[Tag(tag)] = value;
+                return formatted;
+            }
+            else if (!measurements.ContainsKey(Tag(tag)))
+                return formatted;
+            else
+                return formatted + " (" + Change(value, measurements[Tag(tag)], more, less) + ")";
+        }
+        public static string Percents(double value, string more, string less, params string[] tag) => Measurement(value, Percents(value), more, less, tag);
+        public static string Accuracy(double value, params string[] tag) => Percents(value, "worse", "better", tag);
+        static string Unit(double value, string unit)
+        {
+            double abs = Math.Abs(value);
+            if (abs < 0.000_000_1)
+                return string.Format("{0:F1} n{1}", value * 1_000_000_000, unit);
+            if (abs < 0.000_001)
+                return string.Format("{0:F0} n{1}", value * 1_000_000_000, unit);
+            if (abs < 0.000_01)
+                return string.Format("{0:F2} u{1}", value * 1_000_000, unit);
+            if (abs < 0.000_1)
+                return string.Format("{0:F1} u{1}", value * 1_000_000, unit);
+            if (abs < 0.001)
+                return string.Format("{0:F0} u{1}", value * 1_000_000, unit);
+            if (abs < 0.01)
+                return string.Format("{0:F2} m{1}", value * 1000, unit);
+            if (abs < 0.1)
+                return string.Format("{0:F1} m{1}", value * 1000, unit);
+            if (abs < 1)
+                return string.Format("{0:F0} m{1}", value * 1000, unit);
+            if (abs < 10)
+                return string.Format("{0:F2} {1}", value, unit);
+            if (abs < 100)
+                return string.Format("{0:F1} {1}", value, unit);
+            if (abs < 1000)
+                return string.Format("{0:F0} {1}", value, unit);
+            if (abs < 10_000)
+                return string.Format("{0:F2} K{1}", value / 1000, unit);
+            if (abs < 100_000)
+                return string.Format("{0:F1} K{1}", value / 1000, unit);
+            if (abs < 1_000_000)
+                return string.Format("{0:F0} K{1}", value / 1000, unit);
+            if (abs < 10_000_000)
+                return string.Format("{0:F2} M{1}", value / 1_000_000, unit);
+            if (abs < 100_000_000)
+                return string.Format("{0:F1} M{1}", value / 1_000_000, unit);
+            if (abs < 1_000_000_000)
+                return string.Format("{0:F0} M{1}", value / 1_000_000, unit);
+            return string.Format("{0:G} {1}", value, unit);
+        }
+        static string Unit(double value, string unit, string more, string less, params string[] tag) => Measurement(value, Unit(value, unit), more, less, tag);
+        public static string Bytes(double value, params string[] tag) => Unit(value, "B", "larger", "smaller", tag);
+        public static string Minutiae(double value, params string[] tag) => Measurement(value, value.ToString("F0"), "more", "fewer", tag);
     }
 }

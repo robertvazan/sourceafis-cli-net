@@ -29,5 +29,6 @@ namespace SourceAFIS.Cli.Config
             }
             return Path.Combine(root, "sourceafis");
         }
+        public static bool BaselineMode;
     }
 }

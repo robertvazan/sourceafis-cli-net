@@ -15,6 +15,7 @@ namespace SourceAFIS.Cli.Datasets
         public static Profile Everything => new Profile(new AllSamples(), ImageFormat.Default);
         public static Profile[] Aggregate => SampleProfile.Aggregate.Select(sp => new Profile(sp, ImageFormat.Default)).ToArray();
         public static Profile[] All => SampleProfile.All.Select(sp => new Profile(sp, ImageFormat.Default)).ToArray();
+        public string Name => Kind.Name;
         public Dataset[] Datasets
         {
             get
