@@ -1,4 +1,5 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
+using System.Linq;
 using Serilog;
 using SourceAFIS.Cli.Benchmarks;
 using SourceAFIS.Cli.Config;
@@ -15,7 +16,16 @@ namespace SourceAFIS.Cli
                 .CreateLogger();
             var parser = new CommandParser()
                 .Add(new NormalizationOption())
+                .Add(new BaselineOption())
                 .Add(new FootprintBenchmark());
+            var command = parser.Parse(args);
+            if (Configuration.Baseline != null)
+            {
+                Configuration.BaselineMode = true;
+                command();
+                Configuration.BaselineMode = false;
+            }
+            command();
             if (args.Length < 1)
                 return;
             switch (args[0])

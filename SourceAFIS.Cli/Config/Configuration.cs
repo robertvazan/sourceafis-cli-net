@@ -6,13 +6,18 @@ namespace SourceAFIS.Cli.Config
 {
     static class Configuration
     {
-        public static bool Normalized;
         public static string Home = DefaultHome();
+        public static string Baseline;
+        public static bool BaselineMode;
+        public static bool Normalized;
         public static string Output
         {
             get
             {
-                return Path.Combine(Home, "net", FingerprintCompatibility.Version);
+                if (BaselineMode)
+                    return Path.Combine(Home, Baseline);
+                else
+                    return Path.Combine(Home, "net", FingerprintCompatibility.Version);
             }
         }
 
@@ -29,6 +34,5 @@ namespace SourceAFIS.Cli.Config
             }
             return Path.Combine(root, "sourceafis");
         }
-        public static bool BaselineMode;
     }
 }

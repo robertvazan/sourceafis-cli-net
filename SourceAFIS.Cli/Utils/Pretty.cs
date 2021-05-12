@@ -10,10 +10,13 @@ namespace SourceAFIS.Cli.Utils
     {
         public static void Print(string text)
         {
-            if (text.EndsWith("\n"))
-                text = text.Substring(text.Length - 1);
-            foreach (var line in text.Split('\n'))
-                Log.Information("{Line}", line);
+            if (!Configuration.BaselineMode)
+            {
+                if (text.EndsWith("\n"))
+                    text = text.Substring(text.Length - 1);
+                foreach (var line in text.Split('\n'))
+                    Log.Information("{Line}", line);
+            }
         }
         static string Tag(params string[] tag)
         {

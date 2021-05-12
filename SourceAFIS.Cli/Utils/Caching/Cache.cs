@@ -19,6 +19,8 @@ namespace SourceAFIS.Cli.Utils.Caching
             path = compression.Rename(path);
             if (!File.Exists(path))
             {
+                if (Configuration.BaselineMode)
+                    throw new InvalidOperationException("Baseline data was not found.");
                 lock (Reported)
                 {
                     if (!Reported.Contains(category))
