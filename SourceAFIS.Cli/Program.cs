@@ -1,5 +1,4 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
-using System.Linq;
 using Serilog;
 using SourceAFIS.Cli.Benchmarks;
 using SourceAFIS.Cli.Config;
@@ -17,6 +16,7 @@ namespace SourceAFIS.Cli
             var parser = new CommandParser()
                 .Add(new NormalizationOption())
                 .Add(new BaselineOption())
+                .Add(new AccuracyBenchmark())
                 .Add(new FootprintBenchmark());
             var command = parser.Parse(args);
             if (Configuration.Baseline != null)
@@ -30,9 +30,6 @@ namespace SourceAFIS.Cli
                 return;
             switch (args[0])
             {
-                case "accuracy":
-                    ScalarAccuracy.Report();
-                    break;
                 case "extractor-transparency-stats":
                     TransparencyStats.Report(TransparencyStats.ExtractorTable());
                     break;
