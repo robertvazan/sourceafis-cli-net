@@ -1,10 +1,11 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System;
 using System.Linq;
+using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Datasets
 {
-    readonly struct Dataset : IEquatable<Dataset>
+    readonly struct Dataset : DataIdentifier, IEquatable<Dataset>
     {
         public readonly Sample Sample;
         public readonly ImageFormat Format;

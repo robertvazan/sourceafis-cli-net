@@ -1,6 +1,7 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Serilog;
 using SourceAFIS.Cli.Config;
 
@@ -18,6 +19,19 @@ namespace SourceAFIS.Cli.Utils
                     Log.Information("{Line}", line);
             }
         }
+        public static string Extension(string mime)
+        {
+            switch (mime)
+            {
+                case "application/cbor":
+                    return ".cbor";
+                case "text/plain":
+                    return ".txt";
+                default:
+                    return ".dat";
+            }
+        }
+        public static string Dump(string category) => Path.Combine(Configuration.Output, category);
         static string Tag(params string[] tag)
         {
             if (tag.Length == 0)
@@ -136,5 +150,23 @@ namespace SourceAFIS.Cli.Utils
         static string Unit(double value, string unit, string more, string less, params string[] tag) => Measurement(value, Unit(value, unit), more, less, tag);
         public static string Bytes(double value, params string[] tag) => Unit(value, "B", "larger", "smaller", tag);
         public static string Minutiae(double value, params string[] tag) => Measurement(value, value.ToString("F0"), "more", "fewer", tag);
+        static readonly Dictionary<string, long> Lengths = new Dictionary<string, long>();
+        public static string Length(long length, params string[] tag)
+        {
+            if (tag.Length == 0)
+                return length.ToString("N0");
+            else if (Configuration.BaselineMode)
+            {
+                Lengths[Tag(tag)] = length;
+                return Length(length);
+            }
+            else if (!Lengths.ContainsKey(Tag(tag)))
+                return Length(length);
+            else
+            {
+                long baseline = Lengths[Tag(tag)];
+                return Length(length) + " (" + (baseline == length ? "=" : (length - baseline).ToString("+#,#;-#,#;0")) + ")";
+            }
+        }
     }
 }

@@ -1,15 +1,15 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Datasets
 {
-    readonly struct Fingerprint : IEquatable<Fingerprint>
+    readonly struct Fingerprint : DataIdentifier, IEquatable<Fingerprint>
     {
         public readonly Dataset Dataset;
         public readonly int Id;

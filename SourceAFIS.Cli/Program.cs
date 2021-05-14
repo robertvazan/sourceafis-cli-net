@@ -1,7 +1,9 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using Serilog;
 using SourceAFIS.Cli.Benchmarks;
+using SourceAFIS.Cli.Checksums;
 using SourceAFIS.Cli.Config;
+using SourceAFIS.Cli.Logs;
 using SourceAFIS.Cli.Utils.Args;
 
 namespace SourceAFIS.Cli
@@ -17,7 +19,9 @@ namespace SourceAFIS.Cli
                 .Add(new NormalizationOption())
                 .Add(new BaselineOption())
                 .Add(new AccuracyBenchmark())
-                .Add(new FootprintBenchmark());
+                .Add(new FootprintBenchmark())
+                .Add(new ExtractorChecksum())
+                .Add(new ExtractorLog());
             var command = parser.Parse(args);
             if (Configuration.Baseline != null)
             {
@@ -26,24 +30,6 @@ namespace SourceAFIS.Cli
                 Configuration.BaselineMode = false;
             }
             command();
-            if (args.Length < 1)
-                return;
-            switch (args[0])
-            {
-                case "extractor-transparency-stats":
-                    TransparencyStats.Report(TransparencyStats.ExtractorTable());
-                    break;
-                case "extractor-transparency-files":
-                    if (args.Length < 2)
-                        return;
-                    TransparencyFile.Extractor(args[1]);
-                    break;
-                case "normalized-extractor-transparency-files":
-                    if (args.Length < 2)
-                        return;
-                    TransparencyFile.ExtractorNormalized(args[1]);
-                    break;
-            }
         }
     }
 }

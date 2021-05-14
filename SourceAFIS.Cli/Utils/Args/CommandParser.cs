@@ -41,10 +41,10 @@ namespace SourceAFIS.Cli.Utils.Args
                 Log.Information("Available options:");
                 foreach (var registered in Options)
                 {
-                    Log.Information("\t--{}{}", registered.Name, string.Join("", registered.Parameters.Select(p => " <" + p + ">").ToArray()));
-                    Log.Information("\t\t{}", registered.Description);
+                    Log.Information("\t--{Option}{Params}", registered.Name, string.Join("", registered.Parameters.Select(p => " <" + p + ">").ToArray()));
+                    Log.Information("\t\t{Description}", registered.Description);
                     if (registered.Fallback != null)
-                        Log.Information("\t\tDefault: {}", registered.Fallback);
+                        Log.Information("\t\tDefault: {Default}", registered.Fallback);
                 }
                 Environment.Exit(0);
             }
