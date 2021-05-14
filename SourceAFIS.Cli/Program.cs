@@ -1,5 +1,4 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
-using Serilog;
 using SourceAFIS.Cli.Benchmarks;
 using SourceAFIS.Cli.Checksums;
 using SourceAFIS.Cli.Config;
@@ -12,9 +11,6 @@ namespace SourceAFIS.Cli
     {
         static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console(outputTemplate: "{Message:lj}{NewLine}{Exception}")
-                .CreateLogger();
             var parser = new CommandParser()
                 .Add(new NormalizationOption())
                 .Add(new BaselineOption())

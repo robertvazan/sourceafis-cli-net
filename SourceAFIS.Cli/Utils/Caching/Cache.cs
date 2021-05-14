@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Serilog;
 using SourceAFIS.Cli.Config;
 
 namespace SourceAFIS.Cli.Utils.Caching
@@ -26,7 +25,7 @@ namespace SourceAFIS.Cli.Utils.Caching
                     if (!Reported.Contains(category))
                     {
                         Reported.Add(category);
-                        Log.Information("Computing {Category}...", category);
+                        Pretty.Print(string.Format("Computing {0}...", category));
                     }
                 }
                 generator(new CacheBatch(category));

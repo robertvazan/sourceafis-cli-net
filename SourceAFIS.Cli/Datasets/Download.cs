@@ -4,8 +4,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Threading;
-using Serilog;
 using SourceAFIS.Cli.Config;
+using SourceAFIS.Cli.Utils;
 
 namespace SourceAFIS.Cli.Datasets
 {
@@ -107,7 +107,7 @@ namespace SourceAFIS.Cli.Datasets
                     Directory.Delete(temporary, true);
                 Directory.CreateDirectory(temporary);
                 if (Interlocked.Exchange(ref Reported, 1) == 0)
-                    Log.Information("Downloading sample fingerprints...");
+                    Pretty.Print("Downloading sample fingerprints...");
                 var download = temporary + ".zip";
                 using (var client = new WebClient())
                     client.DownloadFile(url, download);

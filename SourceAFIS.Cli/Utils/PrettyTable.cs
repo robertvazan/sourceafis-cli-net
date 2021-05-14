@@ -24,7 +24,7 @@ namespace SourceAFIS.Cli.Utils
                 for (int i = 0; i < Columns.Count; ++i)
                 {
                     if (i + 1 < Columns.Count)
-                        line += string.Format(string.Format("{{0,{0}}}", widths[i] + 2), row[i]);
+                        line += string.Format(string.Format("{{0,-{0}}}", widths[i] + 2), row[i]);
                     else
                         line += row[i];
                 }

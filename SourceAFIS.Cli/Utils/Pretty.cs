@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Serilog;
 using SourceAFIS.Cli.Config;
 
 namespace SourceAFIS.Cli.Utils
@@ -16,7 +15,7 @@ namespace SourceAFIS.Cli.Utils
                 if (text.EndsWith("\n"))
                     text = text.Substring(text.Length - 1);
                 foreach (var line in text.Split('\n'))
-                    Log.Information("{Line}", line);
+                    Console.WriteLine(line);
             }
         }
         public static string Extension(string mime)
@@ -66,10 +65,10 @@ namespace SourceAFIS.Cli.Utils
             double scaled = 100 * value;
             double abs = Math.Abs(scaled);
             if (abs < 1)
-                return string.Format("{0:F3}%%", scaled);
+                return string.Format("{0:F3}%", scaled);
             if (abs < 10)
-                return string.Format("{0:F2}%%", scaled);
-            return string.Format("{0:F1}%%", scaled);
+                return string.Format("{0:F2}%", scaled);
+            return string.Format("{0:F1}%", scaled);
         }
         public static string Factor(double value)
         {
@@ -111,6 +110,8 @@ namespace SourceAFIS.Cli.Utils
         static string Unit(double value, string unit)
         {
             double abs = Math.Abs(value);
+            if (abs == 0)
+                return string.Format("0 {0}", unit);
             if (abs < 0.000_000_1)
                 return string.Format("{0:F1} n{1}", value * 1_000_000_000, unit);
             if (abs < 0.000_001)

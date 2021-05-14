@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Serilog;
 
 namespace SourceAFIS.Cli.Utils.Args
 {
@@ -27,24 +26,24 @@ namespace SourceAFIS.Cli.Utils.Args
         {
             if (args.Length == 0)
             {
-                Log.Information("SourceAFIS CLI for .NET");
-                Log.Information("");
-                Log.Information("Available subcommands:");
+                Pretty.Print("SourceAFIS CLI for .NET");
+                Pretty.Print("");
+                Pretty.Print("Available subcommands:");
                 foreach (var registered in Commands)
                 {
-                    Log.Information("\t{Command}{Params}",
+                    Pretty.Print(string.Format("\t{0}{1}",
                         string.Join(" ", registered.Subcommand),
-                        string.Join("", registered.Parameters.Select(p => " <" + p + ">").ToArray()));
-                    Log.Information("\t\t{Description}", registered.Description);
+                        string.Join("", registered.Parameters.Select(p => " <" + p + ">").ToArray())));
+                    Pretty.Print(string.Format("\t\t{0}", registered.Description));
                 }
-                Log.Information("");
-                Log.Information("Available options:");
+                Pretty.Print("");
+                Pretty.Print("Available options:");
                 foreach (var registered in Options)
                 {
-                    Log.Information("\t--{Option}{Params}", registered.Name, string.Join("", registered.Parameters.Select(p => " <" + p + ">").ToArray()));
-                    Log.Information("\t\t{Description}", registered.Description);
+                    Pretty.Print(string.Format("\t--{0}{1}", registered.Name, string.Join("", registered.Parameters.Select(p => " <" + p + ">").ToArray())));
+                    Pretty.Print(string.Format("\t\t{0}", registered.Description));
                     if (registered.Fallback != null)
-                        Log.Information("\t\tDefault: {Default}", registered.Fallback);
+                        Pretty.Print(string.Format("\t\tDefault: {0}", registered.Fallback));
                 }
                 Environment.Exit(0);
             }
