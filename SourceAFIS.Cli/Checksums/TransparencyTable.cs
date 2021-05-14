@@ -7,7 +7,7 @@ namespace SourceAFIS.Cli.Checksums
 {
     class TransparencyTable
     {
-        public readonly List<TransparencyRow> Rows = new List<TransparencyRow>();
+        public List<TransparencyRow> Rows = new List<TransparencyRow>();
         public static TransparencyTable Solo(string key, string mime, byte[] data)
         {
             var row = new TransparencyRow();
