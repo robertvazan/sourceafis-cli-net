@@ -21,6 +21,7 @@ namespace SourceAFIS.Cli.Benchmarks
                 var serialized = TemplateCache.Load(fp);
                 footprint.Count = 1;
                 footprint.Serialized = serialized.Length;
+                footprint.Minutiae = ParsedTemplate.Parse(fp).Types.Length;
                 return footprint;
             });
         }
