@@ -12,6 +12,7 @@ namespace SourceAFIS.Cli
         static void Main(string[] args)
         {
             var parser = new CommandParser()
+                .Add(new HomeOption())
                 .Add(new NormalizationOption())
                 .Add(new BaselineOption())
                 .Add(new AccuracyBenchmark())
