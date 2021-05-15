@@ -18,9 +18,9 @@ namespace SourceAFIS.Cli.Benchmarks
             return Cache.Get(Path.Combine("benchmarks", "footprint"), fp.Path, () =>
             {
                 var footprint = new FootprintStats();
-                var serialized = TemplateCache.Load(fp);
                 footprint.Count = 1;
-                footprint.Serialized = serialized.Length;
+                footprint.Serialized = TemplateCache.Load(fp).Length;
+                footprint.Memory = MemoryFootprint.Measure(TemplateCache.Deserialize(fp));
                 footprint.Minutiae = ParsedTemplate.Parse(fp).Types.Length;
                 return footprint;
             });
@@ -29,7 +29,7 @@ namespace SourceAFIS.Cli.Benchmarks
         public FootprintStats Sum() => Sum(Profile.Everything);
         public void Print(Profile[] profiles)
         {
-            var table = new PrettyTable("Dataset", "Serialized", "Memory", "Minutiae");
+            var table = new PrettyTable("Dataset", "Serialized", "Memory (est.)", "Minutiae");
             foreach (var profile in profiles)
             {
                 var stats = Sum(profile);
