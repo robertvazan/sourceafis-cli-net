@@ -15,6 +15,7 @@ namespace SourceAFIS.Cli
                 .Add(new HomeOption())
                 .Add(new NormalizationOption())
                 .Add(new BaselineOption())
+                .Add(new VersionReport())
                 .Add(new AccuracyBenchmark())
                 .Add(new FootprintBenchmark())
                 .Add(new ExtractorChecksum())
