@@ -15,8 +15,8 @@ namespace SourceAFIS.Cli.Benchmarks
             readonly Dictionary<Fingerprint, byte[]> Templates;
             FingerprintImage Image;
             FingerprintTemplate Template;
-            public TimedExtraction(Dictionary<Fingerprint, byte[]> templates) => Templates = templates;
             byte[] Expected;
+            public TimedExtraction(Dictionary<Fingerprint, byte[]> templates) => Templates = templates;
             public override void Prepare(Fingerprint fp)
             {
                 Image = fp.Decode();

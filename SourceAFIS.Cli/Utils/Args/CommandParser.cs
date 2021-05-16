@@ -79,8 +79,8 @@ namespace SourceAFIS.Cli.Utils.Args
             }
             if (group == CommandRoot && commandArgs.Count == 0)
                 throw new ArgumentException("Specify subcommand.");
-            var command = group.Overloads[commandArgs.Count];
-            if (command == null)
+            Command command;
+            if (!group.Overloads.TryGetValue(commandArgs.Count, out command))
                 throw new ArgumentException("Unrecognized subcommand.");
             return () => command.Run(commandArgs.ToArray());
         }

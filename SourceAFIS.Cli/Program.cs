@@ -18,6 +18,7 @@ namespace SourceAFIS.Cli
                 .Add(new VersionReport())
                 .Add(new AccuracyBenchmark())
                 .Add(new ExtractionSpeed())
+                .Add(new IdentificationSpeed())
                 .Add(new FootprintBenchmark())
                 .Add(new ExtractorChecksum())
                 .Add(new ExtractorLog());
