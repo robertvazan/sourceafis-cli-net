@@ -33,17 +33,17 @@ namespace SourceAFIS.Cli.Utils.Args
                 {
                     Pretty.Print(string.Format("\t{0}{1}",
                         string.Join(" ", registered.Subcommand),
-                        string.Join("", registered.Parameters.Select(p => " <" + p + ">").ToArray())));
-                    Pretty.Print(string.Format("\t\t{0}", registered.Description));
+                        string.Join("", registered.Parameters.Select(p => $" <{p}>").ToArray())));
+                    Pretty.Print($"\t\t{registered.Description}");
                 }
                 Pretty.Print("");
                 Pretty.Print("Available options:");
                 foreach (var registered in Options)
                 {
-                    Pretty.Print(string.Format("\t--{0}{1}", registered.Name, string.Join("", registered.Parameters.Select(p => " <" + p + ">").ToArray())));
-                    Pretty.Print(string.Format("\t\t{0}", registered.Description));
+                    Pretty.Print(string.Format("\t--{0}{1}", registered.Name, string.Join("", registered.Parameters.Select(p => $" <{p}>").ToArray())));
+                    Pretty.Print($"\t\t{registered.Description}");
                     if (registered.Fallback != null)
-                        Pretty.Print(string.Format("\t\tDefault: {0}", registered.Fallback));
+                        Pretty.Print($"\t\tDefault: {registered.Fallback}");
                 }
                 Environment.Exit(0);
             }
@@ -58,12 +58,12 @@ namespace SourceAFIS.Cli.Utils.Args
                 {
                     var name = arg.Substring(2);
                     if (!OptionMap.ContainsKey(name))
-                        throw new ArgumentException("Unknown option: " + arg);
+                        throw new ArgumentException($"Unknown option: {arg}");
                     var option = OptionMap[name];
                     var optionArgs = new List<string>();
                     for (int i = 0; i < option.Parameters.Length; ++i) {
                         if (consumed >= args.Length)
-                            throw new ArgumentException("Missing argument <" + option.Parameters[i] + "> for option '" + arg + "'.");
+                            throw new ArgumentException($"Missing argument <{option.Parameters[i]}> for option '{arg}'.");
                         optionArgs.Add(args[consumed]);
                         ++consumed;
                     }

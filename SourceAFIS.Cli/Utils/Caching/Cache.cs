@@ -25,7 +25,7 @@ namespace SourceAFIS.Cli.Utils.Caching
                     if (!Reported.Contains(category))
                     {
                         Reported.Add(category);
-                        Pretty.Print(string.Format("Computing {0}...", category));
+                        Pretty.Print($"Computing {category}...");
                     }
                 }
                 generator(new CacheBatch(category));

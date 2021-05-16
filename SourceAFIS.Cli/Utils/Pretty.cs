@@ -65,19 +65,19 @@ namespace SourceAFIS.Cli.Utils
             double scaled = 100 * value;
             double abs = Math.Abs(scaled);
             if (abs < 1)
-                return string.Format("{0:F3}%", scaled);
+                return $"{scaled:F3}%";
             if (abs < 10)
-                return string.Format("{0:F2}%", scaled);
-            return string.Format("{0:F1}%", scaled);
+                return $"{scaled:F2}%";
+            return $"{scaled:F1}%";
         }
         public static string Factor(double value)
         {
             if (value >= 100)
-                return string.Format("{0:F0}x", value);
+                return $"{value:F0}x";
             if (value >= 10)
-                return string.Format("{0:F1}x", value);
+                return $"{value:F1}x";
             if (value >= 2)
-                return string.Format("{0:F2}x", value);
+                return $"{value:F2}x";
             return Percents(value - 1);
         }
         static string Change(double value, double baseline, string more, string less)
