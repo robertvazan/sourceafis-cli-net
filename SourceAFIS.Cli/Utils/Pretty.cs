@@ -169,5 +169,7 @@ namespace SourceAFIS.Cli.Utils
                 return Length(length) + " (" + (baseline == length ? "=" : (length - baseline).ToString("+#,#;-#,#;0")) + ")";
             }
         }
+        public static string Speed(double value, params string[] tag) => Unit(value, "fp/s", "faster", "slower", tag);
+        public static string Time(double value, params string[] tag) => Unit(value, "s", "slower", "faster", tag);
     }
 }
