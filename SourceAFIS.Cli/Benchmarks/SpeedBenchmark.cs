@@ -13,17 +13,20 @@ using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Benchmarks
 {
-    abstract class SpeedBenchmark<K> : Command
+    abstract class SpeedBenchmark : Command
     {
         public const int Duration = 60;
         public const int Warmup = 20;
         public const int NetDuration = Duration - Warmup;
         public const int SampleSize = 10_000;
         public abstract string Name { get; }
+        public override string[] Subcommand => new[] { "benchmark", "speed", Name };
+        public abstract TimingStats Measure();
+    }
+    abstract class SpeedBenchmark<K> : SpeedBenchmark
+    {
         protected abstract Dataset Dataset(K id);
         protected abstract K[] Shuffle();
-        public abstract TimingStats Measure();
-        public override string[] Subcommand => new[] { "benchmark", "speed", Name };
         protected static T[] Shuffle<T>(IEnumerable<T> list)
         {
             var random = new Random();
