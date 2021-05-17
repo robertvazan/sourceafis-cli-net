@@ -7,6 +7,7 @@ using SourceAFIS.Cli.Checksums;
 using SourceAFIS.Cli.Config;
 using SourceAFIS.Cli.Logs;
 using SourceAFIS.Cli.Utils.Args;
+using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli
 {
@@ -39,7 +40,8 @@ namespace SourceAFIS.Cli
                     .Add(new MatchChecksum())
                     .Add(new ExtractorLog())
                     .Add(new ProbeLog())
-                    .Add(new MatchLog());
+                    .Add(new MatchLog())
+                    .Add(new Purge());
                 var command = parser.Parse(args);
                 if (Configuration.Baseline != null)
                 {
