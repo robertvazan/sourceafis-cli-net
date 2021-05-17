@@ -3,7 +3,7 @@
 ARCHIVE=SourceAFIS.Cli/bin/archive
 mkdir -p $ARCHIVE
 # Test that the CLI works at all.
-EXE=dotnet run -p SourceAFIS.Cli -c Release
+EXE="dotnet run -p SourceAFIS.Cli -c Release"
 $EXE version
 # Check fast output first.
 $EXE >$ARCHIVE/help.txt
