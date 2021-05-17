@@ -3,6 +3,13 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Title>SourceAFIS CLI for .NET</Title>
+    <Version>0.0.1</Version>
+    <Authors>robertvazan</Authors>
+    <Description>Command-line interface to SourceAFIS for .NET. Measures accuracy, footprint, and speed. Checks consistency with other SourceAFIS ports.</Description>
+    <PackageProjectUrl>https://sourceafis.machinezoo.com/cli</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/robertvazan/sourceafis-cli-net.git</RepositoryUrl>
+    <PackageTags>fingerprint; biometrics; authentication; sourceafis</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SourceAFIS" Version="3.13.0" />
