@@ -32,7 +32,9 @@ namespace SourceAFIS.Cli
                 .Add(new ExtractorChecksum())
                 .Add(new ProbeChecksum())
                 .Add(new MatchChecksum())
-                .Add(new ExtractorLog());
+                .Add(new ExtractorLog())
+                .Add(new ProbeLog())
+                .Add(new MatchLog());
             var command = parser.Parse(args);
             if (Configuration.Baseline != null)
             {
