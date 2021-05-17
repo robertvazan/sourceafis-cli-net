@@ -1,5 +1,6 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SourceAFIS.Cli.Benchmarks
 {
@@ -51,5 +52,6 @@ namespace SourceAFIS.Cli.Benchmarks
             }
             return (min + max) / 2;
         }
+        public double Average() => Function.Average();
     }
 }

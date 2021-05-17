@@ -169,6 +169,19 @@ namespace SourceAFIS.Cli.Utils
                 return Length(length) + " (" + (baseline == length ? "=" : (length - baseline).ToString("+#,#;-#,#;0")) + ")";
             }
         }
+        public static string Decibans(double value, params string[] tag)
+        {
+            if (tag.Length == 0)
+            {
+                if (value < 10)
+                    return $"{value:F2} dban";
+                if (value < 100)
+                    return $"{value:F1} dban";
+                return $"{value:F0} dban";
+            }
+            else
+                return Measurement(value, Decibans(value), "higher", "lower", tag);
+        }
         public static string Speed(double value, params string[] tag) => Unit(value, "fp/s", "faster", "slower", tag);
         public static string Time(double value, params string[] tag) => Unit(value, "s", "slower", "faster", tag);
     }

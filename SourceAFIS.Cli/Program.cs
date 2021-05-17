@@ -26,7 +26,12 @@ namespace SourceAFIS.Cli
                 .Add(new SerializationSpeed())
                 .Add(new DeserializationSpeed())
                 .Add(new FootprintBenchmark())
+                .Add(new Checksum())
+                .Add(new TemplateChecksum())
+                .Add(new ScoreChecksum())
                 .Add(new ExtractorChecksum())
+                .Add(new ProbeChecksum())
+                .Add(new MatchChecksum())
                 .Add(new ExtractorLog());
             var command = parser.Parse(args);
             if (Configuration.Baseline != null)

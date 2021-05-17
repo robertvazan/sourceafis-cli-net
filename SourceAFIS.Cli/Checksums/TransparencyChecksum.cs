@@ -8,16 +8,13 @@ using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Checksums
 {
-    abstract class TransparencyChecksum<K> : Command
+    abstract class TransparencyChecksum : Command
     {
         public abstract string Name { get; }
-        public abstract K[] Ids();
-        protected abstract TransparencyTable Checksum(K id);
         public override string[] Subcommand => new[] { "checksum", "transparency", Name };
         protected string Category => Path.Combine("checksums", "transparency", Name);
-        public TransparencyTable Checksum() => Cache.Get(Category, "all", () => TransparencyTable.Sum(Ids().Select(id => Checksum(id))));
+        public abstract TransparencyTable Checksum();
         public string Mime(string key) => Checksum().Mime(key);
-        public int Count(K id, string key) => Checksum(id).Count(key);
         public byte[] Global()
         {
             var hash = new Hasher();
@@ -42,5 +39,12 @@ namespace SourceAFIS.Cli.Checksums
             }
             Pretty.Print(table.Format());
         }
+    }
+    abstract class TransparencyChecksum<K> : TransparencyChecksum
+    {
+        public abstract K[] Ids();
+        protected abstract TransparencyTable Checksum(K id);
+        public override TransparencyTable Checksum() => Cache.Get(Category, "all", () => TransparencyTable.Sum(Ids().Select(id => Checksum(id))));
+        public int Count(K id, string key) => Checksum(id).Count(key);
     }
 }
