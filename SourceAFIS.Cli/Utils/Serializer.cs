@@ -73,11 +73,14 @@ namespace SourceAFIS.Cli.Utils
                     stream.WriteByte(0xBF);
                     foreach (var key in map.Keys.Select(k => k.Value<string>()).OrderBy(k => k))
                     {
-                        stream.WriteByte(0x78);
-                        var utf = Encoding.UTF8.GetBytes(key);
-                        stream.WriteByte(checked((byte)utf.Length));
-                        stream.Write(utf);
-                        Normalize(stream, map[key]);
+                        if (key != "version")
+                        {
+                            stream.WriteByte(0x78);
+                            var utf = Encoding.UTF8.GetBytes(key);
+                            stream.WriteByte(checked((byte)utf.Length));
+                            stream.Write(utf);
+                            Normalize(stream, map[key]);
+                        }
                     }
                     stream.WriteByte(0xFF);
                     break;

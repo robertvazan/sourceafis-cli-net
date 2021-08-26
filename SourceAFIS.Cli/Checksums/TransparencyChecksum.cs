@@ -19,7 +19,8 @@ namespace SourceAFIS.Cli.Checksums
         {
             var hash = new Hasher();
             foreach (var row in Checksum().Rows)
-                hash.Add(row.Stats.Hash);
+                if (row.Key != "version")
+                    hash.Add(row.Stats.Hash);
             return hash.Compute();
         }
         public override void Run()
