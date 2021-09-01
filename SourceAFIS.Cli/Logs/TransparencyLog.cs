@@ -36,7 +36,7 @@ namespace SourceAFIS.Cli.Logs
             var collected = KeyDataCollector.Collect(key, action);
             for (int i = 0; i < count; ++i)
             {
-                var raw = collected[index];
+                var raw = collected[i];
                 var normalized = Configuration.Normalized ? Serializer.Normalize(mime, raw) : raw;
                 batch.Add(Identity(key, id, i, count, mime), normalized);
             }
