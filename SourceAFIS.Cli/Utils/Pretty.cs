@@ -76,17 +76,16 @@ namespace SourceAFIS.Cli.Utils
                 return $"{value:F0}x";
             if (value >= 10)
                 return $"{value:F1}x";
-            if (value >= 2)
-                return $"{value:F2}x";
-            return Percents(value - 1);
+            return $"{value:F2}x";
         }
         static string Change(double value, double baseline, string more, string less)
         {
             if (value == baseline)
                 return "=";
             bool positive = value >= baseline;
-            var change = Factor(positive ? value / baseline : baseline / value);
-            if (change == Factor(1))
+            var factor = positive ? value / baseline : baseline / value;
+            var change = factor >= 2 ? Factor(factor) : Percents(Math.Abs(value / baseline - 1));
+            if (change == Percents(0))
                 return "~";
             return change + " " + (positive ? more : less);
         }
