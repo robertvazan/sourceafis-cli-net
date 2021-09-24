@@ -6,51 +6,52 @@ namespace SourceAFIS.Cli.Benchmarks
 {
     class QuantileFunction
     {
-        public double[] Function;
+        double[] Function;
         public QuantileFunction(List<double> function)
         {
             function.Sort();
             Function = function.ToArray();
         }
+        public int Resolution => Function.Length;
+        public double Bar(int index) => Function[index];
         public double Read(double probability)
         {
-            double index = probability * Function.Length;
-            // Quantile function can be visualized as a histogram with equally wide bars.
-            // Provided probability lies between centers of two bars.
-            int upperBar = (int)(index + 0.5);
-            int lowerBar = upperBar - 1;
-            // Extrapolation to infinity for first and last half-bar is safe and realistic.
-            if (upperBar >= Function.Length)
-                return double.PositiveInfinity;
-            if (lowerBar < 0)
-                return double.NegativeInfinity;
-            // Interpolate between bar centers.
-            double upperWeight = index - lowerBar - 0.5;
-            double lowerWeight = 1 - upperWeight;
-            return Function[lowerBar] * lowerWeight + Function[upperBar] * upperWeight;
+            int index = (int)(probability * Function.Length);
+            if (index < 0)
+                return Function[0];
+            if (index >= Function.Length)
+                return Function[Function.Length - 1];
+            return Function[index];
         }
         public double Cdf(double threshold)
         {
-            // Return 0%/100% if we sample data does not cover the threshold.
+            // Return 0%/100% if sample data does not cover the threshold.
             // This also covers cases when threshold is infinite.
             if (threshold <= Function[0])
                 return 0;
             if (threshold > Function[Function.Length - 1])
                 return 1;
-            double min = 0, max = 1;
-            for (int i = 0; i < 30; ++i)
+            int min = 0, max = Function.Length - 1;
+            while (min < max)
             {
-                double probability = (min + max) / 2;
-                double score = Read(probability);
-                // Quantile function is monotonically rising.
-                // If we overshoot probability, we will also overshoot score.
-                // So if score is too high, we need to guess lower probability.
+                // If min+1 < max, then pivot will be between min and max. If min+1 == max, then pivot == min.
+                int pivot = (min + max) / 2;
+                double score = Function[pivot];
+                // Quantile function is monotonically rising (but not strictly rising).
+                // If we overshoot pivot, we will either overshoot score or get score equal to threshold.
+                // If we undershoot pivot, we will also undershoot score.
                 if (score >= threshold)
-                    max = probability;
+                {
+                    // If min+1 == max, then max will be set to min here.
+                    max = pivot;
+                }
                 else
-                    min = probability;
+                {
+                    // If min+1 == max, then min will be set to max here.
+                    min = pivot + 1;
+                }
             }
-            return (min + max) / 2;
+            return min / (double)Function.Length;
         }
         public double Average() => Function.Average();
     }
