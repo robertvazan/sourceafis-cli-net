@@ -3,7 +3,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Title>SourceAFIS CLI for .NET</Title>
-    <Version>1.0.1</Version>
+    <Version>1.2.0</Version>
     <Authors>robertvazan</Authors>
     <Description>Command-line interface to SourceAFIS for .NET. Measures accuracy, footprint, and speed. Checks consistency with other SourceAFIS ports.</Description>
     <PackageProjectUrl>https://sourceafis.machinezoo.com/cli</PackageProjectUrl>
