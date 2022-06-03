@@ -8,19 +8,17 @@ namespace SourceAFIS.Cli.Inputs
     readonly struct Dataset : DataIdentifier, IEquatable<Dataset>
     {
         public readonly Sample Sample;
-        public readonly ImageFormat Format;
-        public Dataset(Sample sample, ImageFormat format)
+        public Dataset(Sample sample)
         {
             Sample = sample;
-            Format = format;
         }
-        public bool Equals(Dataset other) => Sample == other.Sample && Format == other.Format;
+        public bool Equals(Dataset other) => Sample == other.Sample;
         public override bool Equals(object other) => other is Dataset && Equals((Dataset)other);
         public static bool operator ==(Dataset left, Dataset right) => left.Equals(right);
         public static bool operator !=(Dataset left, Dataset right) => !left.Equals(right);
-        public override int GetHashCode() => 31 * Sample.GetHashCode() + Format.GetHashCode();
+        public override int GetHashCode() => Sample.GetHashCode();
         public DatasetLayout Layout => DatasetLayout.Get(this);
-        public static Dataset[] All => Samples.All().Select(s => new Dataset(s, ImageFormat.Default)).ToArray();
+        public static Dataset[] All => Samples.All().Select(s => new Dataset(s)).ToArray();
         public Fingerprint[] Fingerprints
         {
             get

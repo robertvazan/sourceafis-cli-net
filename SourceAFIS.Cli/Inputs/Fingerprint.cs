@@ -30,49 +30,12 @@ namespace SourceAFIS.Cli.Inputs
         public byte[] Load() => File.ReadAllBytes(System.IO.Path.Combine(Dataset.Layout.Directory, Dataset.Layout.Filename(Id)));
         public FingerprintImage Decode()
         {
-            if (Dataset.Format == ImageFormat.Gray)
-            {
-                var gray = Load();
-                int width = (gray[0] << 8) | gray[1];
-                int height = (gray[2] << 8) | gray[3];
-                var pixels = new byte[gray.Length - 4];
-                Array.Copy(gray, 4, pixels, 0, pixels.Length);
-                return new FingerprintImage(width, height, pixels, new FingerprintImageOptions() { Dpi = Dataset.Sample.Dpi() });
-            }
-            else
-            {
-                using (var stream = new MemoryStream(Load()))
-                {
-                    using (var image = Image.FromStream(stream))
-                    {
-                        using (var bitmap = new Bitmap(image))
-                        {
-                            var grayscale = new byte[bitmap.Width * bitmap.Height];
-                            var locked = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-                            try
-                            {
-                                var pixels = new byte[locked.Stride * locked.Height];
-                                Marshal.Copy(locked.Scan0, pixels, 0, pixels.Length);
-                                for (int y = 0; y < bitmap.Height; ++y)
-                                {
-                                    for (int x = 0; x < bitmap.Width; ++x)
-                                    {
-                                        int sum = 0;
-                                        for (int c = 0; c < 3; ++c)
-                                            sum += pixels[y * locked.Stride + x * 3 + c];
-                                        grayscale[y * bitmap.Width + x] = (byte)(sum / 3);
-                                    }
-                                }
-                            }
-                            finally
-                            {
-                                bitmap.UnlockBits(locked);
-                            }
-                            return new FingerprintImage(bitmap.Width, bitmap.Height, grayscale, new FingerprintImageOptions() { Dpi = Dataset.Sample.Dpi() });
-                        }
-                    }
-                }
-            }
+            var gray = Load();
+            int width = (gray[0] << 8) | gray[1];
+            int height = (gray[2] << 8) | gray[3];
+            var pixels = new byte[gray.Length - 4];
+            Array.Copy(gray, 4, pixels, 0, pixels.Length);
+            return new FingerprintImage(width, height, pixels, new FingerprintImageOptions() { Dpi = Dataset.Sample.Dpi() });
         }
     }
 }
