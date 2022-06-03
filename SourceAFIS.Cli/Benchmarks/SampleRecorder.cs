@@ -48,7 +48,7 @@ namespace SourceAFIS.Cli.Benchmarks
             {
                 Starts[Size] = start;
                 Ends[Size] = end;
-                Datasets[Size] = (int)dataset.Sample;
+                Datasets[Size] = (int)dataset.Code;
                 ++Size;
                 if (Size >= 2 * Capacity)
                     Compact();
@@ -61,7 +61,7 @@ namespace SourceAFIS.Cli.Benchmarks
                 var operation = new OperationTiming();
                 operation.Start = (Starts[n] - Epoch) / (double)Stopwatch.Frequency;
                 operation.End = (Ends[n] - Epoch) / (double)Stopwatch.Frequency;
-                operation.Dataset = Samples.Name(Samples.All()[Datasets[n]]);
+                operation.Dataset = new Dataset((DatasetCode)Datasets[n]).Name;
                 return operation;
             }).ToArray();
         }

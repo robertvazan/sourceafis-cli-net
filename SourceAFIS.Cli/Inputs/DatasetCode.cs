@@ -2,7 +2,7 @@
 
 namespace SourceAFIS.Cli.Inputs
 {
-    enum Sample
+    enum DatasetCode
     {
         Fvc2000_1B,
         Fvc2000_2B,

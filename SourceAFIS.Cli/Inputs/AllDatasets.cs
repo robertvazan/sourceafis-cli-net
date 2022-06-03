@@ -2,11 +2,11 @@
 
 namespace SourceAFIS.Cli.Inputs
 {
-    class AllSamples : SampleProfile
+    class AllDatasets : Profile
     {
         public override string Name => "All";
-        public override Sample[] Samples => Inputs.Samples.All();
-        public override bool Equals(object other) => other is AllSamples;
+        public override Dataset[] Datasets => Dataset.All;
+        public override bool Equals(object other) => other is AllDatasets;
         public override int GetHashCode() => 0;
     }
 }

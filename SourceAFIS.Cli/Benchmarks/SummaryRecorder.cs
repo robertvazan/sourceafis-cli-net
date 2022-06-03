@@ -19,7 +19,7 @@ namespace SourceAFIS.Cli.Benchmarks
         public SummaryRecorder(long epoch, int capacity)
         {
             Epoch = epoch;
-            Datasets = new bool[Samples.All().Length];
+            Datasets = new bool[Dataset.All.Length];
             Capacity = capacity;
             int segments = Datasets.Length * capacity;
             Counts = new long[segments];
@@ -34,7 +34,7 @@ namespace SourceAFIS.Cli.Benchmarks
             long duration = end - start;
             if (interval >= 0 && interval < Capacity && duration >= 0)
             {
-                int datasetId = (int)dataset.Sample;
+                int datasetId = (int)dataset.Code;
                 Datasets[datasetId] = true;
                 int segment = datasetId * Capacity + interval;
                 Sums[segment] += duration;
@@ -49,12 +49,12 @@ namespace SourceAFIS.Cli.Benchmarks
         public Dictionary<string, TimingSummary[]> Complete()
         {
             var map = new Dictionary<string, TimingSummary[]>();
-            foreach (var sample in Samples.All())
+            foreach (var dataset in Dataset.All)
             {
-                int datasetId = (int)sample;
+                int datasetId = (int)dataset.Code;
                 if (Datasets[datasetId])
                 {
-                    map[Samples.Name(sample)] = Enumerable.Range(0, Capacity).Select(interval =>
+                    map[dataset.Name] = Enumerable.Range(0, Capacity).Select(interval =>
                     {
                         var summary = new TimingSummary();
                         int segment = datasetId * Capacity + interval;

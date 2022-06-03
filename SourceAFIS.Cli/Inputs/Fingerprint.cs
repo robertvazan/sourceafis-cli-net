@@ -35,7 +35,7 @@ namespace SourceAFIS.Cli.Inputs
             int height = (gray[2] << 8) | gray[3];
             var pixels = new byte[gray.Length - 4];
             Array.Copy(gray, 4, pixels, 0, pixels.Length);
-            return new FingerprintImage(width, height, pixels, new FingerprintImageOptions() { Dpi = Dataset.Sample.Dpi() });
+            return new FingerprintImage(width, height, pixels, new FingerprintImageOptions() { Dpi = Dataset.Dpi });
         }
     }
 }
