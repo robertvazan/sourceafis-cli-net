@@ -1,7 +1,7 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System.IO;
 using System.Linq;
-using SourceAFIS.Cli.Datasets;
+using SourceAFIS.Cli.Inputs;
 using SourceAFIS.Cli.Outputs;
 using SourceAFIS.Cli.Utils;
 using SourceAFIS.Cli.Utils.Args;
@@ -23,7 +23,7 @@ namespace SourceAFIS.Cli.Checksums
                 checksum.Length = serialized.Length;
                 var normalized = Serializer.Normalize(serialized);
                 checksum.Normalized = normalized.Length;
-                checksum.Hash = Hasher.Of(normalized);
+                checksum.Hash = Hasher.Hash(normalized);
                 return checksum;
             });
         }

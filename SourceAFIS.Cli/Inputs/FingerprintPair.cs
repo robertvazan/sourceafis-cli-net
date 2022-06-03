@@ -2,7 +2,7 @@
 using System;
 using SourceAFIS.Cli.Utils.Caching;
 
-namespace SourceAFIS.Cli.Datasets
+namespace SourceAFIS.Cli.Inputs
 {
     readonly struct FingerprintPair : DataIdentifier, IEquatable<FingerprintPair>
     {

@@ -1,5 +1,5 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
-using SourceAFIS.Cli.Datasets;
+using SourceAFIS.Cli.Inputs;
 using SourceAFIS.Cli.Outputs;
 using SourceAFIS.Cli.Utils.Caching;
 

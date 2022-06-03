@@ -7,7 +7,7 @@ using System.Threading;
 using SourceAFIS.Cli.Config;
 using SourceAFIS.Cli.Utils;
 
-namespace SourceAFIS.Cli.Datasets
+namespace SourceAFIS.Cli.Inputs
 {
     static class Download
     {

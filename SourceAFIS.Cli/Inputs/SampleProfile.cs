@@ -1,7 +1,7 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System.Collections.Generic;
 
-namespace SourceAFIS.Cli.Datasets
+namespace SourceAFIS.Cli.Inputs
 {
     abstract class SampleProfile
     {
@@ -13,7 +13,7 @@ namespace SourceAFIS.Cli.Datasets
             get
             {
                 var all = new List<SampleProfile>();
-                foreach (var sample in Datasets.Samples.All())
+                foreach (var sample in Inputs.Samples.All())
                     all.Add(new SingleSample(sample));
                 all.AddRange(Aggregate);
                 return all.ToArray();

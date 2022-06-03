@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using SourceAFIS.Cli.Benchmarks;
-using SourceAFIS.Cli.Datasets;
+using SourceAFIS.Cli.Inputs;
 using SourceAFIS.Cli.Outputs;
 using SourceAFIS.Cli.Utils;
 using SourceAFIS.Cli.Utils.Args;

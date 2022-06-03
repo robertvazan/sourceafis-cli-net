@@ -1,6 +1,6 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 
-namespace SourceAFIS.Cli.Datasets
+namespace SourceAFIS.Cli.Inputs
 {
     class BestSamples : SampleProfile
     {

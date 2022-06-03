@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SourceAFIS.Cli.Datasets;
+using SourceAFIS.Cli.Inputs;
 using SourceAFIS.Cli.Utils;
 using SourceAFIS.Cli.Utils.Args;
 using SourceAFIS.Cli.Utils.Caching;

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SourceAFIS.Cli.Datasets;
+using SourceAFIS.Cli.Inputs;
 using SourceAFIS.Cli.Outputs;
 
 namespace SourceAFIS.Cli.Benchmarks
@@ -57,7 +57,7 @@ namespace SourceAFIS.Cli.Benchmarks
                 int ballooning = Math.Max(1, (int)(RamFootprint / (footprint.Memory / footprint.Count * Fingerprint.All.Length)));
                 var templates = Fingerprint.All.ToDictionary(fp => fp,
                     fp => Enumerable.Range(0, ballooning).Select(n => TemplateCache.Deserialize(fp)).ToArray());
-                var scores = Datasets.Dataset.All.ToDictionary(ds => ds, ds => ScoreCache.Load(ds));
+                var scores = Inputs.Dataset.All.ToDictionary(ds => ds, ds => ScoreCache.Load(ds));
                 return () => new TimedMatchOperation(templates, scores);
             });
         }

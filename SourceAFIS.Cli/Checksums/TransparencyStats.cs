@@ -20,7 +20,7 @@ namespace SourceAFIS.Cli.Checksums
             stats.Length = data.Length;
             var normalized = Serializer.Normalize(mime, data);
             stats.Normalized = normalized.Length;
-            stats.Hash = Hasher.Of(normalized);
+            stats.Hash = Hasher.Hash(normalized);
             return stats;
         }
         public static TransparencyStats Sum(IEnumerable<TransparencyStats> list)

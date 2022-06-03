@@ -9,12 +9,12 @@ namespace SourceAFIS.Cli.Utils
         readonly IncrementalHash Engine = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
         public void Add(byte[] data) => Engine.AppendData(data);
         public byte[] Compute() => Engine.GetHashAndReset();
-        public static byte[] Of(byte[] data)
+        public static byte[] Hash(byte[] data)
         {
             var hash = new Hasher();
             hash.Add(data);
             return hash.Compute();
         }
-        public static byte[] Of(string mime, byte[] data) => Of(Serializer.Normalize(mime, data));
+        public static byte[] Hash(string mime, byte[] data) => Hash(Serializer.Normalize(mime, data));
     }
 }

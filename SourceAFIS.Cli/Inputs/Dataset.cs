@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using SourceAFIS.Cli.Utils.Caching;
 
-namespace SourceAFIS.Cli.Datasets
+namespace SourceAFIS.Cli.Inputs
 {
     readonly struct Dataset : DataIdentifier, IEquatable<Dataset>
     {

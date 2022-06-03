@@ -1,7 +1,7 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System;
 using System.Collections.Generic;
-using SourceAFIS.Cli.Datasets;
+using SourceAFIS.Cli.Inputs;
 using SourceAFIS.Cli.Outputs;
 
 namespace SourceAFIS.Cli.Benchmarks

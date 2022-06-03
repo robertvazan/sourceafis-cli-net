@@ -1,7 +1,7 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System.Linq;
 
-namespace SourceAFIS.Cli.Datasets
+namespace SourceAFIS.Cli.Inputs
 {
     readonly struct Profile
     {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DirectoryApi = System.IO.Directory;
 
-namespace SourceAFIS.Cli.Datasets
+namespace SourceAFIS.Cli.Inputs
 {
     class DatasetLayout
     {
