@@ -14,8 +14,8 @@ namespace SourceAFIS.Cli.Inputs
             get
             {
                 var all = new List<Profile>();
-                foreach (var sample in Dataset.All)
-                    all.Add(new SingleDataset(sample));
+                foreach (var dataset in Dataset.All)
+                    all.Add(new SingleDataset(dataset));
                 all.AddRange(Aggregate);
                 return all.ToArray();
             }

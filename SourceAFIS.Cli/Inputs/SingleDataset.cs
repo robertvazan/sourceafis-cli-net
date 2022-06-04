@@ -5,7 +5,7 @@ namespace SourceAFIS.Cli.Inputs
     class SingleDataset : Profile
     {
         readonly Dataset Dataset;
-        public SingleDataset(Dataset sample) => Dataset = sample;
+        public SingleDataset(Dataset dataset) => Dataset = dataset;
         public override string Name => Dataset.Name;
         public override Dataset[] Datasets => new[] { Dataset };
         public override bool Equals(object other) => other is SingleDataset && ((SingleDataset)other).Dataset == Dataset;
