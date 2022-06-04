@@ -2,8 +2,8 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Dahomey.Cbor;
 using Dahomey.Cbor.ObjectModel;
@@ -19,27 +19,22 @@ namespace SourceAFIS.Cli.Utils
         // Conventions consistent with Java.
         class ConsistentConvention : IObjectMappingConvention
         {
-            static void CollectFields<T>(ObjectMapping<T> mapping, Type type)
-            {
-                // Reflection will not give us private fields of base classes, so walk base classes explicitly.
-                var parent = type.BaseType;
-                if (parent != null)
-                    CollectFields(mapping, parent);
-                foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
-                    if (field.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
-                        mapping.MapMember(field, field.FieldType);
-            }
             public void Apply<T>(SerializationRegistry registry, ObjectMapping<T> mapping)
             {
                 // Java field naming convention.
                 mapping.SetNamingConvention(new CamelCaseNamingConvention());
-                // Do not serialize properties, only fields. Include both public and private fields.
-                CollectFields(mapping, mapping.ObjectType);
+                // Assume there is only one constructor that initializes all record properties.
+                var constructor = mapping.ObjectType.GetConstructors()[0];
+                mapping.MapCreator(constructor);
+                // Serialize only public properties.
+                foreach (var property in mapping.ObjectType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))
+                    if (constructor.GetParameters().Any(parameter => parameter.Name == property.Name))
+                        mapping.MapMember(property, property.PropertyType);
             }
         }
         class ConsistentConventionProvider : IObjectMappingConventionProvider
         {
-            public IObjectMappingConvention GetConvention(Type type) { return new ConsistentConvention(); }
+            public IObjectMappingConvention GetConvention(Type type) => new ConsistentConvention();
         }
         static readonly CborOptions options = new CborOptions();
         static Serializer()
