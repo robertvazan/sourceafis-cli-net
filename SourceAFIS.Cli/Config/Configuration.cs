@@ -25,13 +25,8 @@ namespace SourceAFIS.Cli.Config
         {
             // First try XDG_* variables. Data directories may be in strange locations, for example inside flatpak.
             var configured = Environment.GetEnvironmentVariable("XDG_CACHE_HOME");
-            string root;
-            if (configured != null)
-                root = configured;
-            else {
-                // Fall back to XDG_* default. This will perform poorly on Windows, but it will work.
-                root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
-            }
+            // Fall back to XDG_* default. This will perform poorly on Windows, but it will work.
+            string root = configured ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
             return Path.Combine(root, "sourceafis");
         }
     }

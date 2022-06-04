@@ -13,6 +13,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SourceAFIS" Version="3.13.0" />
-    <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 </Project>

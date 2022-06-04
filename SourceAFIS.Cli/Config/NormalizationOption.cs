@@ -7,6 +7,7 @@ namespace SourceAFIS.Cli.Config
     {
         public override string Name => "normalize";
         public override string Description => "Log normalized transparency data instead of raw data obtained from the library.";
-        public override void Run() => Configuration.Normalized = true;
+        public override string[] Parameters => new string[0];
+        public override void Run(string[] parameters) => Configuration.Normalized = true;
     }
 }

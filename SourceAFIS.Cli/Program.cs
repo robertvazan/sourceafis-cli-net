@@ -1,7 +1,4 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using SourceAFIS.Cli.Benchmarks;
 using SourceAFIS.Cli.Checksums;
 using SourceAFIS.Cli.Config;
@@ -15,49 +12,39 @@ namespace SourceAFIS.Cli
     {
         static void Main(string[] args)
         {
-            try
+            var parser = new CommandParser()
+                .Add(new HomeOption())
+                .Add(new NormalizationOption())
+                .Add(new BaselineOption())
+                .Add(new VersionCommand())
+                .Add(new BenchmarkCommand())
+                .Add(new AccuracyCommand())
+                .Add(new SpeedSummaryCommand())
+                .Add(new ExtractionSpeedCommand())
+                .Add(new IdentificationSpeedCommand())
+                .Add(new VerificationSpeedCommand())
+                .Add(new ProbeSpeedCommand())
+                .Add(new SerializationSpeedCommand())
+                .Add(new DeserializationSpeedCommand())
+                .Add(new FootprintCommand())
+                .Add(new ChecksumSummaryCommand())
+                .Add(new TemplateChecksumCommand())
+                .Add(new ScoreChecksumCommand())
+                .Add(new ExtractionChecksumCommand())
+                .Add(new ProbeChecksumCommand())
+                .Add(new ComparisonChecksumCommand())
+                .Add(new ExtractionLogCommand())
+                .Add(new ProbeLogCommand())
+                .Add(new ComparisonLogCommand())
+                .Add(new PurgeCommand());
+            var command = parser.Parse(args);
+            if (Configuration.Baseline != null)
             {
-                var parser = new CommandParser()
-                    .Add(new HomeOption())
-                    .Add(new NormalizationOption())
-                    .Add(new BaselineOption())
-                    .Add(new VersionReport())
-                    .Add(new BenchmarkOverview())
-                    .Add(new AccuracyBenchmark())
-                    .Add(new SpeedOverview())
-                    .Add(new ExtractionSpeed())
-                    .Add(new IdentificationSpeed())
-                    .Add(new VerificationSpeed())
-                    .Add(new ProbeSpeed())
-                    .Add(new SerializationSpeed())
-                    .Add(new DeserializationSpeed())
-                    .Add(new FootprintBenchmark())
-                    .Add(new Checksum())
-                    .Add(new TemplateChecksum())
-                    .Add(new ScoreChecksum())
-                    .Add(new ExtractorChecksum())
-                    .Add(new ProbeChecksum())
-                    .Add(new MatchChecksum())
-                    .Add(new ExtractorLog())
-                    .Add(new ProbeLog())
-                    .Add(new MatchLog())
-                    .Add(new Purge());
-                var command = parser.Parse(args);
-                if (Configuration.Baseline != null)
-                {
-                    Configuration.BaselineMode = true;
-                    command();
-                    Configuration.BaselineMode = false;
-                }
+                Configuration.BaselineMode = true;
                 command();
+                Configuration.BaselineMode = false;
             }
-            catch (Exception ex)
-            {
-                var chain = new List<Exception>();
-                for (var cause = ex; cause != null; cause = cause.InnerException)
-                    chain.Add(cause);
-                Console.WriteLine(string.Join(" -> ", chain.Select(e => e.GetType().Name + ": " + e.Message)));
-            }
+            command();
         }
     }
 }

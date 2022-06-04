@@ -7,19 +7,20 @@ namespace SourceAFIS.Cli.Utils.Args
 {
     class CommandParser
     {
-        private readonly CommandGroup CommandRoot = new CommandGroup();
-        private readonly List<Command> Commands = new List<Command>();
-        private readonly Dictionary<string, Option> OptionMap = new Dictionary<string, Option>();
-        private readonly List<Option> Options = new List<Option>();
+        readonly CommandGroup commandRoot = new CommandGroup();
+        readonly List<Command> commands = new List<Command>();
+        readonly Dictionary<string, Option> optionMap = new Dictionary<string, Option>();
+        readonly List<Option> options = new List<Option>();
         public CommandParser Add(Command command)
         {
-            CommandRoot.Add(0, command);
-            Commands.Add(command);
+            commandRoot.Add(0, command);
+            commands.Add(command);
             return this;
         }
-        public CommandParser Add(Option option) {
-            OptionMap[option.Name] = option;
-            Options.Add(option);
+        public CommandParser Add(Option option)
+        {
+            optionMap[option.Name] = option;
+            options.Add(option);
             return this;
         }
         public Action Parse(string[] args)
@@ -29,7 +30,7 @@ namespace SourceAFIS.Cli.Utils.Args
                 Pretty.Print("SourceAFIS CLI for .NET");
                 Pretty.Print("");
                 Pretty.Print("Available subcommands:");
-                foreach (var registered in Commands)
+                foreach (var registered in commands)
                 {
                     Pretty.Print(string.Format("\t{0}{1}",
                         string.Join(" ", registered.Subcommand),
@@ -38,7 +39,7 @@ namespace SourceAFIS.Cli.Utils.Args
                 }
                 Pretty.Print("");
                 Pretty.Print("Available options:");
-                foreach (var registered in Options)
+                foreach (var registered in options)
                 {
                     Pretty.Print(string.Format("\t--{0}{1}", registered.Name, string.Join("", registered.Parameters.Select(p => $" <{p}>").ToArray())));
                     Pretty.Print($"\t\t{registered.Description}");
@@ -48,7 +49,7 @@ namespace SourceAFIS.Cli.Utils.Args
                 Environment.Exit(0);
             }
             int consumed = 0;
-            var group = CommandRoot;
+            var group = commandRoot;
             var commandArgs = new List<string>();
             while (consumed < args.Length)
             {
@@ -57,11 +58,12 @@ namespace SourceAFIS.Cli.Utils.Args
                 if (arg.StartsWith("--"))
                 {
                     var name = arg.Substring(2);
-                    if (!OptionMap.ContainsKey(name))
+                    if (!optionMap.ContainsKey(name))
                         throw new ArgumentException($"Unknown option: {arg}");
-                    var option = OptionMap[name];
+                    var option = optionMap[name];
                     var optionArgs = new List<string>();
-                    for (int i = 0; i < option.Parameters.Length; ++i) {
+                    for (int i = 0; i < option.Parameters.Length; ++i)
+                    {
                         if (consumed >= args.Length)
                             throw new ArgumentException($"Missing argument <{option.Parameters[i]}> for option '{arg}'.");
                         optionArgs.Add(args[consumed]);
@@ -77,7 +79,7 @@ namespace SourceAFIS.Cli.Utils.Args
                         commandArgs.Add(arg);
                 }
             }
-            if (group == CommandRoot && commandArgs.Count == 0)
+            if (group == commandRoot && commandArgs.Count == 0)
                 throw new ArgumentException("Specify subcommand.");
             Command command;
             if (!group.Overloads.TryGetValue(commandArgs.Count, out command))

@@ -5,23 +5,16 @@ using SourceAFIS.Cli.Utils;
 
 namespace SourceAFIS.Cli.Checksums
 {
-    class ScoreStats
+    record ScoreStats(double Matching, double Nonmatching, double Selfmatching, byte[] Hash)
     {
-        public double Matching;
-        public double Nonmatching;
-        public double Selfmatching;
-        public byte[] Hash;
         public static ScoreStats Sum(IEnumerable<ScoreStats> list)
         {
-            var sum = new ScoreStats();
-            sum.Matching = list.Select(s => s.Matching).Average();
-            sum.Nonmatching = list.Select(s => s.Nonmatching).Average();
-            sum.Selfmatching = list.Select(s => s.Selfmatching).Average();
-            var hash = new Hasher();
-            foreach (var stats in list)
-                hash.Add(stats.Hash);
-            sum.Hash = hash.Compute();
-            return sum;
+            return new ScoreStats(
+                list.Average(s => s.Matching),
+                list.Average(s => s.Nonmatching),
+                list.Average(s => s.Selfmatching),
+                Hasher.Hash(list, s => s.Hash)
+            );
         }
     }
 }

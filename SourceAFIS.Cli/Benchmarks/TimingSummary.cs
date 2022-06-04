@@ -4,20 +4,16 @@ using System.Linq;
 
 namespace SourceAFIS.Cli.Benchmarks
 {
-    class TimingSummary
+    record TimingSummary(long Count, double Sum, double Min, double Max)
     {
-        public long Count;
-        public double Sum;
-        public double Max;
-        public double Min;
         public static TimingSummary SumAll(IEnumerable<TimingSummary> list)
         {
-            var sum = new TimingSummary();
-            sum.Count = list.Select(s => s.Count).Sum();
-            sum.Sum = list.Select(s => s.Sum).Sum();
-            sum.Max = list.Select(s => (double?)s.Max).Max() ?? 0;
-            sum.Min = list.Where(s => s.Count > 0).Select(s => (double?)s.Min).Min() ?? 0;
-            return sum;
+            return new TimingSummary(
+                list.Sum(s => s.Count),
+                list.Sum(s => s.Sum),
+                list.Where(s => s.Count > 0).Min(s => (double?)s.Min) ?? 0,
+                list.Max(s => (double?)s.Max) ?? 0
+            );
         }
         public static Dictionary<string, TimingSummary[]> Aggregate(IEnumerable<Dictionary<string, TimingSummary[]>> list)
         {

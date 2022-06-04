@@ -5,7 +5,7 @@ using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Outputs
 {
-    class ScoreCache
+    static class ScoreCache
     {
         public static double[][] Load(Dataset dataset)
         {

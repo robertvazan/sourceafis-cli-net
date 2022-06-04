@@ -8,7 +8,7 @@ namespace SourceAFIS.Cli.Utils.Caching
 {
     class Cache
     {
-        static readonly HashSet<string> Reported = new HashSet<string>();
+        static readonly HashSet<string> reported = new HashSet<string>();
         public static T Get<T>(string category, string identity, Action<CacheBatch> generator)
         {
             var path = Path.Combine(Configuration.Output, category, identity);
@@ -20,11 +20,11 @@ namespace SourceAFIS.Cli.Utils.Caching
             {
                 if (Configuration.BaselineMode)
                     throw new InvalidOperationException("Baseline data was not found.");
-                lock (Reported)
+                lock (reported)
                 {
-                    if (!Reported.Contains(category))
+                    if (!reported.Contains(category))
                     {
-                        Reported.Add(category);
+                        reported.Add(category);
                         Pretty.Print($"Computing {category}...");
                     }
                 }

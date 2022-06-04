@@ -6,18 +6,14 @@ using SourceAFIS.Cli.Config;
 
 namespace SourceAFIS.Cli.Utils
 {
-    class Pretty
+    static class Pretty
     {
         public static void Print(string text)
         {
             if (!Configuration.BaselineMode)
-            {
-                if (text.EndsWith("\n"))
-                    text = text.Substring(text.Length - 1);
-                foreach (var line in text.Split('\n'))
-                    Console.WriteLine(line);
-            }
+                Console.WriteLine(text.TrimEnd());
         }
+
         public static string Extension(string mime)
         {
             switch (mime)
@@ -37,7 +33,7 @@ namespace SourceAFIS.Cli.Utils
                 throw new ArgumentException();
             return String.Join("/", tag);
         }
-        static readonly Dictionary<string, string> Hashes = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> hashes = new Dictionary<string, string>();
         public static string Hash(byte[] hash, params string[] tag)
         {
             if (tag.Length == 0)
@@ -45,14 +41,14 @@ namespace SourceAFIS.Cli.Utils
             else if (Configuration.BaselineMode)
             {
                 var formatted = Hash(hash);
-                Hashes[Tag(tag)] = formatted;
+                hashes[Tag(tag)] = formatted;
                 return formatted;
             }
             else
             {
                 string baseline;
                 var current = Hash(hash);
-                if (!Hashes.TryGetValue(Tag(tag), out baseline))
+                if (!hashes.TryGetValue(Tag(tag), out baseline))
                     return current;
                 else if (baseline == current)
                     return current + " (=)";
@@ -150,21 +146,21 @@ namespace SourceAFIS.Cli.Utils
         static string Unit(double value, string unit, string more, string less, params string[] tag) => Measurement(value, Unit(value, unit), more, less, tag);
         public static string Bytes(double value, params string[] tag) => Unit(value, "B", "larger", "smaller", tag);
         public static string Minutiae(double value, params string[] tag) => Measurement(value, value.ToString("F0"), "more", "fewer", tag);
-        static readonly Dictionary<string, long> Lengths = new Dictionary<string, long>();
+        static readonly Dictionary<string, long> lengths = new Dictionary<string, long>();
         public static string Length(long length, params string[] tag)
         {
             if (tag.Length == 0)
                 return length.ToString("N0");
             else if (Configuration.BaselineMode)
             {
-                Lengths[Tag(tag)] = length;
+                lengths[Tag(tag)] = length;
                 return Length(length);
             }
-            else if (!Lengths.ContainsKey(Tag(tag)))
+            else if (!lengths.ContainsKey(Tag(tag)))
                 return Length(length);
             else
             {
-                long baseline = Lengths[Tag(tag)];
+                long baseline = lengths[Tag(tag)];
                 return Length(length) + " (" + (baseline == length ? "=" : (length - baseline).ToString("+#,#;-#,#;0")) + ")";
             }
         }

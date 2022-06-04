@@ -11,30 +11,30 @@ namespace SourceAFIS.Cli.Inputs
 {
     class DatasetLayout
     {
-        public readonly string Directory;
-        readonly int[] OffsetArray;
-        readonly int[] FingerArray;
-        readonly String[] NameArray;
-        readonly String[] FilenameArray;
-        readonly String[] PrefixArray;
-        public int Fingers => OffsetArray.Length - 1;
-        public int Impressions(int finger) => OffsetArray[finger + 1] - OffsetArray[finger];
-        public int Fingerprints => FingerArray.Length;
+        public readonly string directory;
+        readonly int[] offsets;
+        readonly int[] fingers;
+        readonly String[] names;
+        readonly String[] filenames;
+        readonly String[] prefixes;
+        public int Fingers => offsets.Length - 1;
+        public int Impressions(int finger) => offsets[finger + 1] - offsets[finger];
+        public int Fingerprints => fingers.Length;
         public int Fingerprint(int finger, int impression)
         {
             if (impression < 0 || impression >= Impressions(finger))
                 throw new ArgumentOutOfRangeException();
-            return OffsetArray[finger] + impression;
+            return offsets[finger] + impression;
         }
-        public int Finger(int fp) => FingerArray[fp];
-        public int Impression(int fp) => fp - OffsetArray[Finger(fp)];
-        public string Name(int fp) => NameArray[fp];
-        public string Filename(int fp) => FilenameArray[fp];
-        public string Prefix(int finger) => PrefixArray[finger];
+        public int Finger(int fp) => fingers[fp];
+        public int Impression(int fp) => fp - offsets[Finger(fp)];
+        public string Name(int fp) => names[fp];
+        public string Filename(int fp) => filenames[fp];
+        public string Prefix(int finger) => prefixes[finger];
         static readonly Regex Pattern = new Regex(@"^(.+)_[0-9]+\.(?:tif|tiff|png|bmp|jpg|jpeg|wsq|gray)$");
         public DatasetLayout(string directory)
         {
-            Directory = directory;
+            this.directory = directory;
             var groups = new Dictionary<string, List<string>>();
             foreach (var path in DirectoryApi.GetFiles(directory))
             {
@@ -54,28 +54,28 @@ namespace SourceAFIS.Cli.Inputs
                 throw new Exception("Found only one finger in the dataset.");
             if (!groups.Values.Any(l => l.Count > 1))
                 throw new Exception("Found only one impression per finger in the dataset.");
-            PrefixArray = new string[groups.Count];
-            NameArray = new string[groups.Values.Sum(l => l.Count)];
-            FilenameArray = new string[NameArray.Length];
-            OffsetArray = new int[PrefixArray.Length + 1];
-            FingerArray = new int[NameArray.Length];
+            prefixes = new string[groups.Count];
+            names = new string[groups.Values.Sum(l => l.Count)];
+            filenames = new string[names.Length];
+            offsets = new int[prefixes.Length + 1];
+            fingers = new int[names.Length];
             int finger = 0;
             int fp = 0;
             foreach (var prefix in groups.Keys.OrderBy(k => k))
             {
-                PrefixArray[finger] = prefix;
-                OffsetArray[finger + 1] = OffsetArray[finger] + groups[prefix].Count;
+                prefixes[finger] = prefix;
+                offsets[finger + 1] = offsets[finger] + groups[prefix].Count;
                 foreach (var filename in groups[prefix].OrderBy(f => f))
                 {
-                    FilenameArray[fp] = filename;
-                    NameArray[fp] = Path.GetFileNameWithoutExtension(filename);
-                    FingerArray[fp] = finger;
+                    filenames[fp] = filename;
+                    names[fp] = Path.GetFileNameWithoutExtension(filename);
+                    fingers[fp] = finger;
                     ++fp;
                 }
                 ++finger;
             }
         }
-        static readonly ConcurrentDictionary<Dataset, DatasetLayout> All = new ConcurrentDictionary<Dataset, DatasetLayout>();
-        public static DatasetLayout Get(Dataset dataset) => All.GetOrAdd(dataset, ds => new DatasetLayout(Download.Unpack(dataset)));
+        static readonly ConcurrentDictionary<Dataset, DatasetLayout> all = new ConcurrentDictionary<Dataset, DatasetLayout>();
+        public static DatasetLayout Get(Dataset dataset) => all.GetOrAdd(dataset, ds => new DatasetLayout(Download.Unpack(dataset)));
     }
 }

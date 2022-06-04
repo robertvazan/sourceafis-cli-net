@@ -1,25 +1,19 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SourceAFIS.Cli.Benchmarks
 {
-    class FootprintStats
+    record FootprintStats(int Count, double Serialized, double Memory, double Minutiae)
     {
-        public int Count;
-        public double Serialized;
-        public double Memory;
-        public double Minutiae;
         public static FootprintStats Sum(IEnumerable<FootprintStats> list)
         {
-            var sum = new FootprintStats();
-            foreach (var stats in list)
-            {
-                sum.Count += stats.Count;
-                sum.Serialized += stats.Serialized;
-                sum.Memory += stats.Memory;
-                sum.Minutiae += stats.Minutiae;
-            }
-            return sum;
+            return new FootprintStats(
+                list.Sum(s => s.Count),
+                list.Sum(s => s.Serialized),
+                list.Sum(s => s.Memory),
+                list.Sum(s => s.Minutiae)
+            );
         }
     }
 }

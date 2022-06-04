@@ -6,14 +6,14 @@ namespace SourceAFIS.Cli.Checksums
 {
     class ChecksumCollector : FingerprintTransparency
     {
-        readonly List<TransparencyTable> Records = new List<TransparencyTable>();
-        public override void Take(string key, string mime, byte[] data) => Records.Add(TransparencyTable.Solo(key, mime, data));
-        public static TransparencyTable Collect(Action action)
+        readonly List<ChecksumTable> Records = new List<ChecksumTable>();
+        public override void Take(string key, string mime, byte[] data) => Records.Add(ChecksumTable.Solo(key, mime, data));
+        public static ChecksumTable Collect(Action action)
         {
             using (var transparency = new ChecksumCollector())
             {
                 action();
-                return TransparencyTable.Sum(transparency.Records);
+                return ChecksumTable.Sum(transparency.Records);
             }
         }
     }

@@ -4,24 +4,16 @@ using System.Linq;
 
 namespace SourceAFIS.Cli.Benchmarks
 {
-    class AccuracyStats
+    record AccuracyStats(double Eer, double Fmr100, double Fmr1K, double Fmr10K)
     {
-        public double Eer;
-        public double Fmr100;
-        public double Fmr1K;
-        public double Fmr10K;
         public static AccuracyStats Sum(IEnumerable<AccuracyStats> list)
         {
-            var sum = new AccuracyStats();
-            int count = list.Count();
-            foreach (var stats in list)
-            {
-                sum.Eer += stats.Eer / count;
-                sum.Fmr100 += stats.Fmr100 / count;
-                sum.Fmr1K += stats.Fmr1K / count;
-                sum.Fmr10K += stats.Fmr10K / count;
-            }
-            return sum;
+            return new AccuracyStats(
+                list.Average(s => s.Eer),
+                list.Average(s => s.Fmr100),
+                list.Average(s => s.Fmr1K),
+                list.Average(s => s.Fmr10K)
+            );
         }
     }
 }

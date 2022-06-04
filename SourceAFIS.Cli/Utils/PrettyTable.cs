@@ -6,24 +6,24 @@ namespace SourceAFIS.Cli.Utils
 {
     class PrettyTable
     {
-        readonly List<string> Columns;
-        readonly List<List<string>> Rows = new List<List<string>>();
+        readonly List<string> columns;
+        readonly List<List<string>> rows = new List<List<string>>();
         public PrettyTable(params string[] columns)
         {
-            Columns = columns.ToList();
-            Rows.Add(Columns);
+            this.columns = columns.ToList();
+            rows.Add(this.columns);
         }
-        public void Add(params string[] cells) => Rows.Add(cells.ToList());
+        public void Add(params string[] cells) => rows.Add(cells.ToList());
         public string Format()
         {
-            var widths = Enumerable.Range(0, Columns.Count).Select(cn => Rows.Select(r => r[cn].Length).Max()).ToArray();
+            var widths = Enumerable.Range(0, columns.Count).Select(cn => rows.Select(r => r[cn].Length).Max()).ToArray();
             var lines = new List<string>();
-            foreach (var row in Rows)
+            foreach (var row in rows)
             {
                 var line = "";
-                for (int i = 0; i < Columns.Count; ++i)
+                for (int i = 0; i < columns.Count; ++i)
                 {
-                    if (i + 1 < Columns.Count)
+                    if (i + 1 < columns.Count)
                         line += string.Format(string.Format("{{0,-{0}}}", widths[i] + 2), row[i]);
                     else
                         line += row[i];

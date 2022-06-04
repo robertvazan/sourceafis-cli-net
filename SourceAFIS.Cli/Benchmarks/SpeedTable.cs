@@ -12,9 +12,9 @@ namespace SourceAFIS.Cli.Benchmarks
         {
             Table = new PrettyTable(key, "Iterations", "Parallel", "Thread", "Mean", "Min", "Max", "Sample", "Median", "SD", "Geom.mean", "GSD");
         }
-        public void Add(string name, TimingStats stats)
+        public void Add(string name, TimingData stats)
         {
-            var total = TimingSummary.SumAll(stats.Segments.Values.SelectMany(a => a));
+            var total = TimingSummary.SumAll(stats.Series.Values.SelectMany(a => a));
             double mean = total.Sum / total.Count;
             double speed = 1 / mean;
             var sample = stats.Sample.Select(o => o.End - o.Start).OrderBy(t => t).ToArray();

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SourceAFIS.Cli.Inputs
 {
-    abstract class Profile
+    abstract record Profile
     {
         public abstract string Name { get; }
         public abstract Dataset[] Datasets { get; }

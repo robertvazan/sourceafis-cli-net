@@ -41,20 +41,20 @@ namespace SourceAFIS.Cli.Utils
         {
             public IObjectMappingConvention GetConvention(Type type) { return new ConsistentConvention(); }
         }
-        static readonly CborOptions Options = new CborOptions();
+        static readonly CborOptions options = new CborOptions();
         static Serializer()
         {
-            Options.Registry.ObjectMappingConventionRegistry.RegisterProvider(new ConsistentConventionProvider());
+            options.Registry.ObjectMappingConventionRegistry.RegisterProvider(new ConsistentConventionProvider());
         }
         public static byte[] Serialize(object data)
         {
             using (var buffer = new ByteBufferWriter())
             {
-                Cbor.Serialize(data, data.GetType(), buffer, Options);
+                Cbor.Serialize(data, data.GetType(), buffer, options);
                 return buffer.WrittenSpan.ToArray();
             }
         }
-        public static T Deserialize<T>(byte[] bytes) => Cbor.Deserialize<T>(bytes, Options);
+        public static T Deserialize<T>(byte[] bytes) => Cbor.Deserialize<T>(bytes, options);
         static byte[] ReverseBytes(byte[] bytes)
         {
             if (BitConverter.IsLittleEndian)

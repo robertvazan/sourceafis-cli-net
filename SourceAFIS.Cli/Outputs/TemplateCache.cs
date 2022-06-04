@@ -4,7 +4,7 @@ using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Outputs
 {
-	class TemplateCache
+	static class TemplateCache
 	{
 		public static byte[] Load(Fingerprint fp)
 		{
