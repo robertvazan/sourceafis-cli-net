@@ -11,10 +11,10 @@ namespace SourceAFIS.Cli.Checksums
         public override void Run()
         {
             var table = new PrettyTable("Data", "Hash");
-            table.Add("Templates", Pretty.Hash(new TemplateChecksumCommand().Global(), "templates"));
-            table.Add("Scores", Pretty.Hash(new ScoreChecksumCommand().Global(), "scores"));
-            foreach (var transparency in new TransparencyChecksumCommand[] { new ExtractionChecksumCommand(), new ProbeChecksumCommand(), new ComparisonChecksumCommand() })
-                table.Add("Transparency/" + transparency.Name, Pretty.Hash(transparency.Global(), "transparency", transparency.Name));
+            table.Add("templates", Pretty.Hash(new TemplateChecksumCommand().Global(), "templates"));
+            table.Add("scores", Pretty.Hash(new ScoreChecksumCommand().Global(), "scores"));
+            foreach (var transparency in new ChecksumCommand[] { new ExtractionChecksumCommand(), new ProbeChecksumCommand(), new ComparisonChecksumCommand() })
+                table.Add(transparency.Name, Pretty.Hash(transparency.Global(), transparency.Name));
             Pretty.Print(table.Format());
         }
     }

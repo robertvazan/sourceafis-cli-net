@@ -26,7 +26,7 @@ namespace SourceAFIS.Cli.Utils
                 // Assume there is only one constructor that initializes all record properties.
                 var constructor = mapping.ObjectType.GetConstructors()[0];
                 mapping.MapCreator(constructor);
-                // Serialize only public properties.
+                // Serialize only public properties that are also constructor parameters.
                 foreach (var property in mapping.ObjectType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))
                     if (constructor.GetParameters().Any(parameter => parameter.Name == property.Name))
                         mapping.MapMember(property, property.PropertyType);

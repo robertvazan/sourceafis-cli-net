@@ -7,11 +7,11 @@ using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Checksums
 {
-    abstract record TransparencyChecksumCommand : SimpleCommand
+    abstract record ChecksumCommand : SimpleCommand
     {
         public abstract string Name { get; }
-        public override string[] Subcommand => new[] { "checksum", "transparency", Name };
-        protected string Category => Path.Combine("checksums", "transparency", Name);
+        public override string[] Subcommand => new[] { "checksum", Name };
+        protected string Category => Path.Combine("checksums", Name);
         public abstract ChecksumTable Checksum();
         public string Mime(string key) => Checksum().Mime(key);
         public byte[] Global()
@@ -40,7 +40,7 @@ namespace SourceAFIS.Cli.Checksums
             Pretty.Print(table.Format());
         }
     }
-    abstract record TransparencyChecksum<K> : TransparencyChecksumCommand
+    abstract record TransparencyChecksum<K> : ChecksumCommand
     {
         public abstract K[] Ids();
         protected abstract ChecksumTable Checksum(K id);
