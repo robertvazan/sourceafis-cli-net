@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using SourceAFIS.Cli.Config;
 using SourceAFIS.Cli.Utils;
@@ -47,7 +48,8 @@ namespace SourceAFIS.Cli.Inputs
         {
             return Path.Combine(Configuration.Home, "inputs", "grayscale", dataset.Name);
         }
-        static int Reported;
+        static int reported;
+        static readonly HttpClient client = new HttpClient();
         public static string Unpack(Dataset dataset)
         {
             var directory = Location(dataset);
@@ -58,11 +60,10 @@ namespace SourceAFIS.Cli.Inputs
                 if (Directory.Exists(temporary))
                     Directory.Delete(temporary, true);
                 Directory.CreateDirectory(temporary);
-                if (Interlocked.Exchange(ref Reported, 1) == 0)
+                if (Interlocked.Exchange(ref reported, 1) == 0)
                     Pretty.Print("Downloading sample fingerprints...");
                 var download = temporary + ".zip";
-                using (var client = new WebClient())
-                    client.DownloadFile(url, download);
+                File.WriteAllBytes(download, client.GetByteArrayAsync(url).Result);
                 ZipFile.ExtractToDirectory(download, temporary);
                 File.Delete(download);
                 Directory.Move(temporary, directory);
