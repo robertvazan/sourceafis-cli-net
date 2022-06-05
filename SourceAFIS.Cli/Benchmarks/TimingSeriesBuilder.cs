@@ -59,7 +59,7 @@ namespace SourceAFIS.Cli.Benchmarks
                         int segment = datasetId * Capacity + interval;
                         return new TimingSummary(
                             Counts[segment],
-                            Sums[segment] / (double)Stopwatch.Frequency,
+                            Sums[segment] / (double)Stopwatch.Frequency / Counts[segment],
                             Counts[segment] > 0 ? Minima[segment] / (double)Stopwatch.Frequency : 0,
                             Maxima[segment] / (double)Stopwatch.Frequency
                         );
