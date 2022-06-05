@@ -14,7 +14,7 @@ namespace SourceAFIS.Cli.Benchmarks
         {
             readonly Dictionary<Fingerprint, byte[]> Templates;
             FingerprintImage Image;
-            FingerprintTemplate Template;
+            byte[] Template;
             byte[] Expected;
             public TimedExtraction(Dictionary<Fingerprint, byte[]> templates) => Templates = templates;
             public override void Prepare(Fingerprint fp)
@@ -22,8 +22,10 @@ namespace SourceAFIS.Cli.Benchmarks
                 Image = fp.Decode();
                 Expected = Templates[fp];
             }
-            public override void Execute() => Template = new FingerprintTemplate(Image);
-            public override bool Verify() => Enumerable.SequenceEqual(Expected, Template.ToByteArray());
+            // Include serialization in extractor benchmark, because the two are often performed together
+            // and serialization is not important enough to warrant its own benchmark.
+            public override void Execute() => Template = new FingerprintTemplate(Image).ToByteArray();
+            public override bool Verify() => Enumerable.SequenceEqual(Expected, Template);
         }
         public override TimingData Measure()
         {

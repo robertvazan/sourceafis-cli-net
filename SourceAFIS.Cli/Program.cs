@@ -24,7 +24,6 @@ namespace SourceAFIS.Cli
                 .Add(new IdentificationSpeedCommand())
                 .Add(new VerificationSpeedCommand())
                 .Add(new ProbeSpeedCommand())
-                .Add(new SerializationSpeedCommand())
                 .Add(new DeserializationSpeedCommand())
                 .Add(new FootprintCommand())
                 .Add(new ChecksumSummaryCommand())
