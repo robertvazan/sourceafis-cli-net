@@ -31,9 +31,8 @@ namespace SourceAFIS.Cli.Checksums
                 table.Add("Key", row.Key);
                 table.Add("MIME", stats.Mime);
                 table.Add("Count", Pretty.Length(stats.Count));
-                table.Add("Length", Pretty.Length(stats.Length / stats.Count, row.Key, "length"));
-                table.Add("Normalized", Pretty.Length(stats.Normalized / stats.Count, row.Key, "normalized"));
-                table.Add("Total", Pretty.Length(stats.Normalized, row.Key, "total"));
+                table.Add("Length", Pretty.Length(stats.Length, row.Key, "length"));
+                table.Add("Normalized", Pretty.Length(stats.Normalized, row.Key, "normalized"));
                 table.Add("Hash", Pretty.Hash(stats.Hash, row.Key, "hash"));
             }
             table.Print();

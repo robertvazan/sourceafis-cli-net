@@ -13,7 +13,7 @@ namespace SourceAFIS.Cli.Benchmarks
         public void Add(string name, TimingData stats)
         {
             var total = TimingSummary.SumAll(stats.Series.Values.SelectMany(a => a));
-            double mean = total.Sum / total.Count;
+            double mean = total.Mean;
             double speed = 1 / mean;
             var sample = stats.Sample.Select(o => o.End - o.Start).OrderBy(t => t).ToArray();
             double median = sample.Length % 2 == 0

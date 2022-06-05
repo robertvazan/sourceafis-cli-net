@@ -5,7 +5,7 @@ using SourceAFIS.Cli.Utils;
 
 namespace SourceAFIS.Cli.Checksums
 {
-    record TemplateStats(int Count, long Length, long Normalized, byte[] Hash)
+    record TemplateStats(long Count, long Length, long Normalized, byte[] Hash)
     {
         public static TemplateStats Sum(IEnumerable<TemplateStats> list)
         {

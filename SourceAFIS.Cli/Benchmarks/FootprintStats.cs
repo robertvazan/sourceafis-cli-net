@@ -4,15 +4,14 @@ using System.Linq;
 
 namespace SourceAFIS.Cli.Benchmarks
 {
-    record FootprintStats(int Count, double Serialized, double Memory, double Minutiae)
+    record FootprintStats(double Serialized, double Memory, double Minutiae)
     {
         public static FootprintStats Sum(IEnumerable<FootprintStats> list)
         {
             return new FootprintStats(
-                list.Sum(s => s.Count),
-                list.Sum(s => s.Serialized),
-                list.Sum(s => s.Memory),
-                list.Sum(s => s.Minutiae)
+                list.Average(s => s.Serialized),
+                list.Average(s => s.Memory),
+                list.Average(s => s.Minutiae)
             );
         }
     }

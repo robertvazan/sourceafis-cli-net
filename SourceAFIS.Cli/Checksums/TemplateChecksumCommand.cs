@@ -32,9 +32,8 @@ namespace SourceAFIS.Cli.Checksums
                 var stats = Checksum(profile);
                 table.Add("Dataset", profile.Name);
                 table.Add("Count", Pretty.Length(stats.Count));
-                table.Add("Length", Pretty.Length(stats.Length / stats.Count, profile.Name, "length"));
-                table.Add("Normalized", Pretty.Length(stats.Normalized / stats.Count, profile.Name, "normalized"));
-                table.Add("Total", Pretty.Length(stats.Normalized, profile.Name, "total"));
+                table.Add("Length", Pretty.Length(stats.Length, profile.Name, "length"));
+                table.Add("Normalized", Pretty.Length(stats.Normalized, profile.Name, "normalized"));
                 table.Add("Hash", Pretty.Hash(stats.Hash, profile.Name, "hash"));
             }
             table.Print();

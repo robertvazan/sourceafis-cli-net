@@ -54,7 +54,7 @@ namespace SourceAFIS.Cli.Benchmarks
             return Measure(() =>
             {
                 var footprint = new FootprintCommand().Sum();
-                int ballooning = Math.Max(1, (int)(RamFootprint / (footprint.Memory / footprint.Count * Fingerprint.All.Length)));
+                int ballooning = Math.Max(1, (int)(RamFootprint / (footprint.Memory * Fingerprint.All.Length)));
                 var templates = Fingerprint.All.ToDictionary(fp => fp,
                     fp => Enumerable.Range(0, ballooning).Select(n => TemplateCache.Deserialize(fp)).ToArray());
                 var scores = Inputs.Dataset.All.ToDictionary(ds => ds, ds => ScoreCache.Load(ds));

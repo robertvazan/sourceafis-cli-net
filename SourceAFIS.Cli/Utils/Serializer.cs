@@ -17,6 +17,7 @@ namespace SourceAFIS.Cli.Utils
     static class Serializer
     {
         // Conventions consistent with Java.
+        // Also a workaround for https://github.com/dahomey-technologies/Dahomey.Cbor/issues/88
         class ConsistentConvention : IObjectMappingConvention
         {
             public void Apply<T>(SerializationRegistry registry, ObjectMapping<T> mapping)

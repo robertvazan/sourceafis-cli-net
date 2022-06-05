@@ -1,16 +1,17 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SourceAFIS.Cli.Benchmarks
 {
-    record TimingSummary(long Count, double Sum, double Min, double Max)
+    record TimingSummary(long Count, double Mean, double Min, double Max)
     {
         public static TimingSummary SumAll(IEnumerable<TimingSummary> list)
         {
             return new TimingSummary(
                 list.Sum(s => s.Count),
-                list.Sum(s => s.Sum),
+                list.Average(s => s.Mean),
                 list.Where(s => s.Count > 0).Min(s => (double?)s.Min) ?? 0,
                 list.Max(s => (double?)s.Max) ?? 0
             );
