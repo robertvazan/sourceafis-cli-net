@@ -29,17 +29,16 @@ namespace SourceAFIS.Cli.Benchmarks
         public FootprintStats Sum() => Sum(Profile.Everything);
         public void Print(Profile[] profiles)
         {
-            var table = new PrettyTable("Dataset", "Serialized", "Memory (est.)", "Minutiae");
+            var table = new PrettyTable();
             foreach (var profile in profiles)
             {
                 var stats = Sum(profile);
-                table.Add(
-                    profile.Name,
-                    Pretty.Bytes(stats.Serialized / stats.Count, profile.Name, "serialized"),
-                    Pretty.Bytes(stats.Memory / stats.Count, profile.Name, "memory"),
-                    Pretty.Minutiae(stats.Minutiae / stats.Count, profile.Name, "minutiae"));
+                table.Add("Dataset", profile.Name);
+                table.Add("Serialized", Pretty.Bytes(stats.Serialized / stats.Count, profile.Name, "serialized"));
+                table.Add("Memory", Pretty.Bytes(stats.Memory / stats.Count, profile.Name, "memory"));
+                table.Add("Minutiae", Pretty.Minutiae(stats.Minutiae / stats.Count, profile.Name, "minutiae"));
             }
-            Pretty.Print(table.Format());
+            table.Print();
         }
         public override void Run() => Print(Profile.All);
     }

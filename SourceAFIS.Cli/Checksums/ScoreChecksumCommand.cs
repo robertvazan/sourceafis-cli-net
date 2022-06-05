@@ -43,18 +43,17 @@ namespace SourceAFIS.Cli.Checksums
         public byte[] Global() => Checksum(Profile.Everything).Hash;
         public override void Run()
         {
-            var table = new PrettyTable("Dataset", "Matching", "Non-matching", "Self-matching", "Hash");
+            var table = new PrettyTable();
             foreach (var profile in Profile.All)
             {
                 var stats = Checksum(profile);
-                table.Add(
-                    profile.Name,
-                    Pretty.Decibans(stats.Matching, profile.Name, "matching"),
-                    Pretty.Decibans(stats.Nonmatching, profile.Name, "nonmatching"),
-                    Pretty.Decibans(stats.Selfmatching, profile.Name, "selfmatching"),
-                    Pretty.Hash(stats.Hash, profile.Name, "hash"));
+                table.Add("Dataset", profile.Name);
+                table.Add("Matching", Pretty.Decibans(stats.Matching, profile.Name, "matching"));
+                table.Add("Non-matching", Pretty.Decibans(stats.Nonmatching, profile.Name, "nonmatching"));
+                table.Add("Self-matching", Pretty.Decibans(stats.Selfmatching, profile.Name, "selfmatching"));
+                table.Add("Hash", Pretty.Hash(stats.Hash, profile.Name, "hash"));
             }
-            Pretty.Print(table.Format());
+            table.Print();
         }
     }
 }

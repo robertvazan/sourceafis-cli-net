@@ -26,19 +26,18 @@ namespace SourceAFIS.Cli.Checksums
         public byte[] Global() => Checksum(Profile.Everything).Hash;
         public override void Run()
         {
-            var table = new PrettyTable("Dataset", "Count", "Length", "Normalized", "Total", "Hash");
+            var table = new PrettyTable();
             foreach (var profile in Profile.All)
             {
                 var stats = Checksum(profile);
-                table.Add(
-                    profile.Name,
-                    Pretty.Length(stats.Count),
-                    Pretty.Length(stats.Length / stats.Count, profile.Name, "length"),
-                    Pretty.Length(stats.Normalized / stats.Count, profile.Name, "normalized"),
-                    Pretty.Length(stats.Normalized, profile.Name, "total"),
-                    Pretty.Hash(stats.Hash, profile.Name, "hash"));
+                table.Add("Dataset", profile.Name);
+                table.Add("Count", Pretty.Length(stats.Count));
+                table.Add("Length", Pretty.Length(stats.Length / stats.Count, profile.Name, "length"));
+                table.Add("Normalized", Pretty.Length(stats.Normalized / stats.Count, profile.Name, "normalized"));
+                table.Add("Total", Pretty.Length(stats.Normalized, profile.Name, "total"));
+                table.Add("Hash", Pretty.Hash(stats.Hash, profile.Name, "hash"));
             }
-            Pretty.Print(table.Format());
+            table.Print();
         }
     }
 }

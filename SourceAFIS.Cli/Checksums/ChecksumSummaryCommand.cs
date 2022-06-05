@@ -1,4 +1,5 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
+using System;
 using SourceAFIS.Cli.Utils;
 using SourceAFIS.Cli.Utils.Args;
 
@@ -8,14 +9,37 @@ namespace SourceAFIS.Cli.Checksums
     {
         public override string[] Subcommand => new[] { "checksum" };
         public override string Description => "Compute consistency checksum of all algorithm outputs.";
+        record GlobalHasher(string Name, Func<byte[]> Runner)
+        {
+            public GlobalHasher(string name, ChecksumCommand command) : this(name, command.Global) { }
+        }
+        static byte[] Total()
+        {
+            var sum = new Hasher();
+            foreach (var hasher in GlobalHashers)
+                if (object.ReferenceEquals(hasher, TotalHasher))
+                    sum.Add(hasher.Runner());
+            return sum.Compute();
+        }
+        static readonly GlobalHasher TotalHasher = new GlobalHasher("Total", Total);
+        static readonly GlobalHasher[] GlobalHashers = new GlobalHasher[]
+        {
+            new GlobalHasher("Templates", new TemplateChecksumCommand().Global),
+            new GlobalHasher("Scores", new ScoreChecksumCommand().Global),
+            new GlobalHasher("Extraction", new ExtractionChecksumCommand()),
+            new GlobalHasher("Probe", new ProbeChecksumCommand()),
+            new GlobalHasher("Comparison", new ComparisonChecksumCommand()),
+            TotalHasher
+        };
         public override void Run()
         {
-            var table = new PrettyTable("Data", "Hash");
-            table.Add("templates", Pretty.Hash(new TemplateChecksumCommand().Global(), "templates"));
-            table.Add("scores", Pretty.Hash(new ScoreChecksumCommand().Global(), "scores"));
-            foreach (var transparency in new ChecksumCommand[] { new ExtractionChecksumCommand(), new ProbeChecksumCommand(), new ComparisonChecksumCommand() })
-                table.Add(transparency.Name, Pretty.Hash(transparency.Global(), transparency.Name));
-            Pretty.Print(table.Format());
+            var table = new PrettyTable();
+            foreach (var hasher in GlobalHashers)
+            {
+                table.Add("Data", hasher.Name);
+                table.Add("Hash", Pretty.Hash(hasher.Runner(), hasher.Name));
+            }
+            table.Print();
         }
     }
 }

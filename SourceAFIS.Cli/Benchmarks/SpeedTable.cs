@@ -7,11 +7,9 @@ namespace SourceAFIS.Cli.Benchmarks
 {
     class SpeedTable
     {
-        readonly PrettyTable Table;
-        public SpeedTable(string key)
-        {
-            Table = new PrettyTable(key, "Iterations", "Parallel", "Thread", "Mean", "Min", "Max", "Sample", "Median", "SD", "Geom.mean", "GSD");
-        }
+        readonly PrettyTable table = new PrettyTable();
+        readonly string key;
+        public SpeedTable(string key) => this.key = key;
         public void Add(string name, TimingData stats)
         {
             var total = TimingSummary.SumAll(stats.Series.Values.SelectMany(a => a));
@@ -25,20 +23,19 @@ namespace SourceAFIS.Cli.Benchmarks
             var positive = sample.Where(v => v > 0).ToArray();
             var gm = Math.Exp(positive.Select(v => Math.Log(v)).Sum() / positive.Length);
             var gsd = Math.Exp(Math.Sqrt(positive.Select(v => Math.Pow(Math.Log(v / gm), 2)).Sum() / positive.Length));
-            Table.Add(
-                name,
-                Pretty.Length(total.Count),
-                Pretty.Speed(speed * stats.Threads),
-                Pretty.Speed(speed, name, "thread"),
-                Pretty.Time(mean),
-                Pretty.Time(total.Min),
-                Pretty.Time(total.Max),
-                Pretty.Length(sample.Length),
-                Pretty.Time(median),
-                Pretty.Time(sd),
-                Pretty.Time(gm),
-                Pretty.Factor(gsd));
+            table.Add(key, name);
+            table.Add("Iterations", Pretty.Length(total.Count));
+            table.Add("Parallel", Pretty.Speed(speed * stats.Threads));
+            table.Add("Thread", Pretty.Speed(speed, name, "thread"));
+            table.Add("Mean", Pretty.Time(mean));
+            table.Add("Min", Pretty.Time(total.Min));
+            table.Add("Max", Pretty.Time(total.Max));
+            table.Add("Sample", Pretty.Length(sample.Length));
+            table.Add("Median", Pretty.Time(median));
+            table.Add("SD", Pretty.Time(sd));
+            table.Add("Geom.mean", Pretty.Time(gm));
+            table.Add("GSD", Pretty.Factor(gsd));
         }
-        public void Print() => Pretty.Print(Table.Format());
+        public void Print() => table.Print();
     }
 }

@@ -24,20 +24,19 @@ namespace SourceAFIS.Cli.Checksums
         }
         public override void Run()
         {
-            var table = new PrettyTable("Key", "MIME", "Count", "Length", "Normalized", "Total", "Hash");
+            var table = new PrettyTable();
             foreach (var row in Checksum().Rows)
             {
                 var stats = row.Stats;
-                table.Add(
-                    row.Key,
-                    stats.Mime,
-                    Pretty.Length(stats.Count),
-                    Pretty.Length(stats.Length / stats.Count, row.Key, "length"),
-                    Pretty.Length(stats.Normalized / stats.Count, row.Key, "normalized"),
-                    Pretty.Length(stats.Normalized, row.Key, "total"),
-                    Pretty.Hash(stats.Hash, row.Key, "hash"));
+                table.Add("Key", row.Key);
+                table.Add("MIME", stats.Mime);
+                table.Add("Count", Pretty.Length(stats.Count));
+                table.Add("Length", Pretty.Length(stats.Length / stats.Count, row.Key, "length"));
+                table.Add("Normalized", Pretty.Length(stats.Normalized / stats.Count, row.Key, "normalized"));
+                table.Add("Total", Pretty.Length(stats.Normalized, row.Key, "total"));
+                table.Add("Hash", Pretty.Hash(stats.Hash, row.Key, "hash"));
             }
-            Pretty.Print(table.Format());
+            table.Print();
         }
     }
     abstract record TransparencyChecksum<K> : ChecksumCommand

@@ -7,15 +7,22 @@ namespace SourceAFIS.Cli.Utils
     class PrettyTable
     {
         readonly List<string> columns;
-        readonly List<List<string>> rows = new List<List<string>>();
-        public PrettyTable(params string[] columns)
+        readonly List<string> cells = new List<string>();
+        public void Add(string column, string cell)
         {
-            this.columns = columns.ToList();
-            rows.Add(this.columns);
+            if (!columns.Contains(column))
+                columns.Add(column);
+            cells.Add(cell);
         }
-        public void Add(params string[] cells) => rows.Add(cells.ToList());
         public string Format()
         {
+            var rows = new List<List<string>>();
+            rows.Add(columns);
+            int rank = columns.Count;
+            if (rank == 0)
+                return "";
+            for (int i = 0; i < cells.Count / rank; ++i)
+                rows.Add(cells.GetRange(i * rank, rank));
             var widths = Enumerable.Range(0, columns.Count).Select(cn => rows.Select(r => r[cn].Length).Max()).ToArray();
             var lines = new List<string>();
             foreach (var row in rows)
@@ -32,5 +39,6 @@ namespace SourceAFIS.Cli.Utils
             }
             return string.Join("\n", lines);
         }
+        public void Print() => Pretty.Print(Format());
     }
 }

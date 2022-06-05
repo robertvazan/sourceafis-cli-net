@@ -27,17 +27,17 @@ namespace SourceAFIS.Cli.Benchmarks
         AccuracyStats Sum(Profile profile) => AccuracyStats.Sum(profile.Datasets.Select(ds => Measure(ds)));
         public void Print(Profile[] profiles)
         {
-            var table = new PrettyTable("Dataset", "EER", "FMR100", "FMR1K", "FMR10K");
+            var table = new PrettyTable();
             foreach (var profile in profiles)
             {
                 var stats = Sum(profile);
-                table.Add(profile.Name,
-                    Pretty.Accuracy(stats.Eer, profile.Name, "EER"),
-                    Pretty.Accuracy(stats.Fmr100, profile.Name, "FMR100"),
-                    Pretty.Accuracy(stats.Fmr1K, profile.Name, "FMR1K"),
-                    Pretty.Accuracy(stats.Fmr10K, profile.Name, "FMR10K"));
+                table.Add("Dataset", profile.Name);
+                table.Add("EER", Pretty.Accuracy(stats.Eer, profile.Name, "EER"));
+                table.Add("FMR100", Pretty.Accuracy(stats.Fmr100, profile.Name, "FMR100"));
+                table.Add("FMR1K", Pretty.Accuracy(stats.Fmr1K, profile.Name, "FMR1K"));
+                table.Add("FMR10K", Pretty.Accuracy(stats.Fmr10K, profile.Name, "FMR10K"));
             }
-            Pretty.Print(table.Format());
+            table.Print();
         }
         public override void Run() => Print(Profile.All);
     }
