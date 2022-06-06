@@ -7,10 +7,10 @@ namespace SourceAFIS.Cli.Benchmarks
     {
         readonly TimingSeriesBuilder Summaries;
         readonly TimingSampleBuilder Sample;
-        public TimingDataBuilder(long epoch, int seconds, int measurements)
+        public TimingDataBuilder(long epoch)
         {
-            Summaries = new TimingSeriesBuilder(epoch, seconds);
-            Sample = new TimingSampleBuilder(epoch, measurements);
+            Summaries = new TimingSeriesBuilder(epoch);
+            Sample = new TimingSampleBuilder(epoch);
         }
         public bool Add(Dataset dataset, long start, long end)
         {

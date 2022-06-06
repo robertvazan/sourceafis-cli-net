@@ -9,38 +9,36 @@ namespace SourceAFIS.Cli.Benchmarks
 {
     class TimingSeriesBuilder
     {
-        readonly long Epoch;
-        readonly int Capacity;
-        readonly bool[] Datasets;
-        readonly long[] Counts;
-        readonly long[] Sums;
-        readonly long[] Maxima;
-        readonly long[] Minima;
-        public TimingSeriesBuilder(long epoch, int capacity)
+        readonly long epoch;
+        readonly bool[] datasets;
+        readonly long[] counts;
+        readonly long[] sums;
+        readonly long[] maxima;
+        readonly long[] minima;
+        public TimingSeriesBuilder(long epoch)
         {
-            Epoch = epoch;
-            Datasets = new bool[Dataset.All.Length];
-            Capacity = capacity;
-            int segments = Datasets.Length * capacity;
-            Counts = new long[segments];
-            Sums = new long[segments];
-            Maxima = new long[segments];
-            Minima = new long[segments];
-            Array.Fill(Minima, long.MaxValue);
+            this.epoch = epoch;
+            datasets = new bool[Dataset.All.Length];
+            int segments = datasets.Length * TimingSeries.Duration;
+            counts = new long[segments];
+            sums = new long[segments];
+            maxima = new long[segments];
+            minima = new long[segments];
+            Array.Fill(minima, long.MaxValue);
         }
         public bool Add(Dataset dataset, long start, long end)
         {
-            int interval = (int)((end - Epoch) / Stopwatch.Frequency);
+            int interval = (int)((end - epoch) / Stopwatch.Frequency);
             long duration = end - start;
-            if (interval >= 0 && interval < Capacity && duration >= 0)
+            if (interval >= 0 && interval < TimingSeries.Duration && duration >= 0)
             {
                 int datasetId = (int)dataset.Code;
-                Datasets[datasetId] = true;
-                int segment = datasetId * Capacity + interval;
-                Sums[segment] += duration;
-                Maxima[segment] = Math.Max(Maxima[segment], duration);
-                Minima[segment] = Math.Min(Minima[segment], duration);
-                ++Counts[segment];
+                datasets[datasetId] = true;
+                int segment = datasetId * TimingSeries.Duration + interval;
+                sums[segment] += duration;
+                maxima[segment] = Math.Max(maxima[segment], duration);
+                minima[segment] = Math.Min(minima[segment], duration);
+                ++counts[segment];
                 return true;
             }
             else
@@ -52,16 +50,18 @@ namespace SourceAFIS.Cli.Benchmarks
             foreach (var dataset in Dataset.All)
             {
                 int datasetId = (int)dataset.Code;
-                if (Datasets[datasetId])
+                if (datasets[datasetId])
                 {
-                    map[dataset.Name] = Enumerable.Range(0, Capacity).Select(interval =>
+                    map[dataset.Name] = Enumerable.Range(0, TimingSeries.Duration).Select(interval =>
                     {
-                        int segment = datasetId * Capacity + interval;
+                        int segment = datasetId * TimingSeries.Duration + interval;
+                        if (counts[segment] == 0)
+                            return new TimingSummary(0, Double.NaN, Double.NaN, Double.NaN);
                         return new TimingSummary(
-                            Counts[segment],
-                            Sums[segment] / (double)Stopwatch.Frequency / Counts[segment],
-                            Counts[segment] > 0 ? Minima[segment] / (double)Stopwatch.Frequency : 0,
-                            Maxima[segment] / (double)Stopwatch.Frequency
+                            counts[segment],
+                            sums[segment] / (double)Stopwatch.Frequency / counts[segment],
+                            minima[segment] / (double)Stopwatch.Frequency,
+                            maxima[segment] / (double)Stopwatch.Frequency
                         );
                     }).ToArray();
                 }

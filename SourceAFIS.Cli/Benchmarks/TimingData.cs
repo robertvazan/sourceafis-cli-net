@@ -7,34 +7,15 @@ namespace SourceAFIS.Cli.Benchmarks
 {
     record TimingData(int Threads, Dictionary<string, TimingSummary[]> Series, TimingMeasurement[] Sample)
     {
-        public static TimingData Sum(int size, TimingData[] list)
+        public static TimingData Sum(TimingData[] list)
         {
             return new TimingData(
                 list.Sum(s => s.Threads),
-                TimingSummary.Aggregate(list.Select(s => s.Series)),
-                TimingMeasurement.Sample(size, Enumerable.Range(0, list.Length).Select(n =>
-                {
-                    var totals = TimingSummary.SumAll(list.SelectMany(s => s.Series.Values).SelectMany(a => a));
-                    return (totals, list[n].Sample);
-                }).ToArray())
+                TimingSeries.Sum(list.Select(s => s.Series)),
+                TimingSample.Sum(list.Select(s => s.Sample))
             );
         }
-        public TimingData Skip(int seconds)
-        {
-            return new TimingData(
-                Threads,
-                Series.ToDictionary(e => e.Key, e => e.Value.Skip(seconds).ToArray()),
-                Sample.Where(s => s.End >= seconds).ToArray()
-            );
-        }
-        public TimingData Narrow(Profile profile)
-        {
-            var names = profile.Datasets.Select(ds => ds.Name).ToHashSet();
-            return new TimingData(
-                Threads,
-                Series.Where(e => names.Contains(e.Key)).ToDictionary(e => e.Key, e => e.Value),
-                Sample.Where(s => names.Contains(s.Dataset)).ToArray()
-            );
-        }
+        public TimingData Warmup() => new TimingData(Threads, TimingSeries.Warmup(Series), TimingSample.Warmup(Sample));
+        public TimingData Narrow(Profile profile) => new TimingData(Threads, TimingSeries.Narrow(Series, profile), TimingSample.Narrow(Sample, profile));
     }
 }

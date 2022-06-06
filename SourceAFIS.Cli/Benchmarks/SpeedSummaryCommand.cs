@@ -19,7 +19,7 @@ namespace SourceAFIS.Cli.Benchmarks
             };
             var table = new SpeedTable("Operation");
             foreach (var benchmark in benchmarks)
-                table.Add(benchmark.Name, benchmark.Measure().Skip(SpeedCommand.Warmup));
+                table.Add(benchmark.Name, benchmark.Measure().Warmup(), benchmark.Measure());
             table.Print();
         }
     }

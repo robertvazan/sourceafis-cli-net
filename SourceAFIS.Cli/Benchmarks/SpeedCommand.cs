@@ -15,10 +15,6 @@ namespace SourceAFIS.Cli.Benchmarks
 {
     abstract record SpeedCommand : SimpleCommand
     {
-        public const int Duration = 60;
-        public const int Warmup = 20;
-        public const int NetDuration = Duration - Warmup;
-        public const int SampleSize = 10_000;
         public abstract string Name { get; }
         public override string[] Subcommand => new[] { "benchmark", "speed", Name };
         public abstract TimingData Measure();
@@ -78,7 +74,7 @@ namespace SourceAFIS.Cli.Benchmarks
                 var strata = Parallelize(() =>
                 {
                     var ids = Shuffle();
-                    var recorder = new TimingDataBuilder(epoch, Duration, SampleSize);
+                    var builder = new TimingDataBuilder(epoch);
                     var operation = allocator();
                     return () =>
                     {
@@ -92,25 +88,24 @@ namespace SourceAFIS.Cli.Benchmarks
                                 long end = Stopwatch.GetTimestamp();
                                 if (!operation.Verify())
                                     Volatile.Write(ref nondeterministic, true);
-                                if (!recorder.Add(Dataset(id), start, end))
-                                    return recorder.Build();
+                                if (!builder.Add(Dataset(id), start, end))
+                                    return builder.Build();
                             }
                         }
                     };
                 });
                 if (Volatile.Read(ref nondeterministic))
                     Pretty.Print("Non-deterministic algorithm.");
-                return TimingData.Sum(SampleSize, strata);
+                return TimingData.Sum(strata);
             });
         }
         public override void Run()
         {
-            var all = Measure().Skip(Warmup);
-            var global = TimingSummary.SumAll(all.Series.Values.SelectMany(a => a));
-            Pretty.Print("Gross speed: " + Pretty.Speed(global.Count / (double)NetDuration, "gross"));
+            var data = Measure();
+            var warm = data.Warmup();
             var table = new SpeedTable("Dataset");
             foreach (var profile in Profile.All)
-                table.Add(profile.Name, all.Narrow(profile));
+                table.Add(profile.Name, warm.Narrow(profile), data);
             table.Print();
         }
     }

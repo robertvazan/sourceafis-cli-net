@@ -8,60 +8,62 @@ namespace SourceAFIS.Cli.Benchmarks
 {
     class TimingSampleBuilder
     {
-        readonly long Epoch;
-        readonly int Capacity;
-        readonly long[] Starts;
-        readonly long[] Ends;
-        readonly int[] Datasets;
-        int Size;
-        int Generation;
-        readonly Random Random = new Random();
-        public TimingSampleBuilder(long epoch, int capacity)
+        readonly long epoch;
+        readonly long[] starts;
+        readonly long[] ends;
+        readonly int[] datasets;
+        int size;
+        int generation;
+        readonly Random random = new Random();
+        public TimingSampleBuilder(long epoch)
         {
-            Epoch = epoch;
-            Capacity = capacity;
-            Starts = new long[2 * capacity];
-            Ends = new long[2 * capacity];
-            Datasets = new int[2 * capacity];
+            this.epoch = epoch;
+            starts = new long[2 * TimingSample.SampleSize];
+            ends = new long[2 * TimingSample.SampleSize];
+            datasets = new int[2 * TimingSample.SampleSize];
         }
         void Compact()
         {
-            for (int i = 0; i < Capacity; ++i)
+            for (int i = 0; i < TimingSample.SampleSize; ++i)
             {
-                int next = i + Random.Next(Size - i);
-                long start = Starts[next];
-                long end = Ends[next];
-                var dataset = Datasets[next];
-                Starts[next] = Starts[i];
-                Ends[next] = Ends[i];
-                Datasets[next] = Datasets[i];
-                Starts[i] = start;
-                Ends[i] = end;
-                Datasets[i] = dataset;
+                int next = i + random.Next(size - i);
+                long start = starts[next];
+                long end = ends[next];
+                var dataset = datasets[next];
+                starts[next] = starts[i];
+                ends[next] = ends[i];
+                datasets[next] = datasets[i];
+                starts[i] = start;
+                ends[i] = end;
+                datasets[i] = dataset;
             }
-            Size = Capacity;
-            ++Generation;
+            size = TimingSample.SampleSize;
+            ++generation;
         }
         public void Add(Dataset dataset, long start, long end)
         {
-            if (Generation == 0 || Random.Next(1 << Generation) == 0)
+            if (generation == 0 || random.Next(1 << generation) == 0)
             {
-                Starts[Size] = start;
-                Ends[Size] = end;
-                Datasets[Size] = (int)dataset.Code;
-                ++Size;
-                if (Size >= 2 * Capacity)
+                starts[size] = start;
+                ends[size] = end;
+                datasets[size] = (int)dataset.Code;
+                ++size;
+                if (size >= 2 * TimingSample.SampleSize)
                     Compact();
             }
         }
         public TimingMeasurement[] Build()
         {
-            return Enumerable.Range(0, Size).Select(n =>
+            // Limit size to capacity, so that size does not randomly vary between threads.
+            // If we are in generation 0 and size is still below capacity, threads should still have comparable number of samples.
+            if (size > TimingSample.SampleSize)
+                Compact();
+            return Enumerable.Range(0, size).Select(n =>
             {
                 return new TimingMeasurement(
-                    new Dataset((DatasetCode)Datasets[n]).Name,
-                    (Starts[n] - Epoch) / (double)Stopwatch.Frequency,
-                    (Ends[n] - Epoch) / (double)Stopwatch.Frequency
+                    new Dataset((DatasetCode)datasets[n]).Name,
+                    (starts[n] - epoch) / (double)Stopwatch.Frequency,
+                    (ends[n] - epoch) / (double)Stopwatch.Frequency
                 );
             }).ToArray();
         }
