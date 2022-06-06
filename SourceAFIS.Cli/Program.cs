@@ -23,7 +23,6 @@ namespace SourceAFIS.Cli
                 .Add(new ExtractionSpeedCommand())
                 .Add(new IdentificationSpeedCommand())
                 .Add(new VerificationSpeedCommand())
-                .Add(new ProbeSpeedCommand())
                 .Add(new DeserializationSpeedCommand())
                 .Add(new FootprintCommand())
                 .Add(new ChecksumSummaryCommand())

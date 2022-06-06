@@ -9,6 +9,13 @@ namespace SourceAFIS.Cli.Utils
     {
         readonly IncrementalHash engine = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
         public void Add(byte[] data) => engine.AppendData(data);
+        public void Add(double value)
+        {
+            var buffer = BitConverter.GetBytes(value);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(buffer);
+            Add(buffer);
+        }
         public byte[] Compute() => engine.GetHashAndReset();
         public static byte[] Hash(byte[] data)
         {

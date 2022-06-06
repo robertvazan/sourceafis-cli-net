@@ -14,7 +14,6 @@ namespace SourceAFIS.Cli.Benchmarks
                 new ExtractionSpeedCommand(),
                 new IdentificationSpeedCommand(),
                 new VerificationSpeedCommand(),
-                new ProbeSpeedCommand(),
                 new DeserializationSpeedCommand()
             };
             var table = new SpeedTable("Operation");

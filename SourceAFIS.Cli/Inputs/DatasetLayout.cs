@@ -12,21 +12,21 @@ namespace SourceAFIS.Cli.Inputs
     class DatasetLayout
     {
         public readonly string directory;
-        readonly int[] offsets;
-        readonly int[] fingers;
-        readonly String[] names;
-        readonly String[] filenames;
-        readonly String[] prefixes;
+        readonly ushort[] offsets;
+        readonly ushort[] fingers;
+        readonly string[] names;
+        readonly string[] filenames;
+        readonly string[] prefixes;
         public int Fingers => offsets.Length - 1;
         public int Impressions(int finger) => offsets[finger + 1] - offsets[finger];
         public int Fingerprints => fingers.Length;
-        public int Fingerprint(int finger, int impression)
+        public ushort Fingerprint(int finger, int impression)
         {
             if (impression < 0 || impression >= Impressions(finger))
                 throw new ArgumentOutOfRangeException();
-            return offsets[finger] + impression;
+            return (ushort)(offsets[finger] + impression);
         }
-        public int Finger(int fp) => fingers[fp];
+        public ushort Finger(int fp) => fingers[fp];
         public int Impression(int fp) => fp - offsets[Finger(fp)];
         public string Name(int fp) => names[fp];
         public string Filename(int fp) => filenames[fp];
@@ -57,14 +57,14 @@ namespace SourceAFIS.Cli.Inputs
             prefixes = new string[groups.Count];
             names = new string[groups.Values.Sum(l => l.Count)];
             filenames = new string[names.Length];
-            offsets = new int[prefixes.Length + 1];
-            fingers = new int[names.Length];
-            int finger = 0;
+            offsets = new ushort[prefixes.Length + 1];
+            fingers = new ushort[names.Length];
+            ushort finger = 0;
             int fp = 0;
             foreach (var prefix in groups.Keys.OrderBy(k => k))
             {
                 prefixes[finger] = prefix;
-                offsets[finger + 1] = offsets[finger] + groups[prefix].Count;
+                offsets[finger + 1] = (ushort)(offsets[finger] + groups[prefix].Count);
                 foreach (var filename in groups[prefix].OrderBy(f => f))
                 {
                     filenames[fp] = filename;

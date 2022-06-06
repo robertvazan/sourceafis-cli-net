@@ -22,6 +22,6 @@ namespace SourceAFIS.Cli.Benchmarks
             else
                 return false;
         }
-        public TimingData Build() => new TimingData(1, Summaries.Build(), Sample.Build());
+        public TimingData Build(byte[] hash) => new TimingData(1, Summaries.Build(), Sample.Build(), hash);
     }
 }

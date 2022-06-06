@@ -1,5 +1,4 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
-using System;
 using System.IO;
 using System.Linq;
 using SourceAFIS.Cli.Benchmarks;
@@ -22,15 +21,8 @@ namespace SourceAFIS.Cli.Checksums
                 var trio = new QuantileTrio(dataset);
                 var hash = new Hasher();
                 foreach (var row in ScoreCache.Load(dataset))
-                {
                     foreach (var score in row)
-                    {
-                        var buffer = BitConverter.GetBytes(score);
-                        if (BitConverter.IsLittleEndian)
-                            Array.Reverse(buffer);
-                        hash.Add(buffer);
-                    }
-                }
+                        hash.Add(score);
                 return new ScoreStats(
                     trio.Matching.Average(),
                     trio.Nonmatching.Average(),

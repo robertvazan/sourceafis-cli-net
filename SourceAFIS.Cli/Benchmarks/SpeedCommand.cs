@@ -21,21 +21,7 @@ namespace SourceAFIS.Cli.Benchmarks
     }
     abstract record SpeedCommand<K> : SpeedCommand
     {
-        protected abstract Dataset Dataset(K id);
-        protected abstract K[] Shuffle();
-        protected static T[] Shuffle<T>(IEnumerable<T> list)
-        {
-            var random = new Random();
-            var shuffled = list.ToArray();
-            for (int i = shuffled.Length; i > 0; --i)
-            {
-                int k = random.Next(i);
-                T tmp = shuffled[k];
-                shuffled[k] = shuffled[i - 1];
-                shuffled[i - 1] = tmp;
-            }
-            return shuffled;
-        }
+        protected abstract Sampler<K> Sampler();
         static TimingData[] Parallelize(Func<Func<TimingData>> setup)
         {
             var threads = new List<Thread>();
@@ -68,34 +54,29 @@ namespace SourceAFIS.Cli.Benchmarks
         {
             return Cache.Get(Path.Combine("benchmarks", "speed", Name), "measurement", () =>
             {
-                var nondeterministic = false;
                 var epoch = Stopwatch.GetTimestamp();
                 var allocator = setup();
                 var strata = Parallelize(() =>
                 {
-                    var ids = Shuffle();
+                    var sampler = Sampler();
                     var builder = new TimingDataBuilder(epoch);
                     var operation = allocator();
+                    var hasher = new Hasher();
                     return () =>
                     {
                         while (true)
                         {
-                            foreach (var id in ids)
-                            {
-                                operation.Prepare(id);
-                                long start = Stopwatch.GetTimestamp();
-                                operation.Execute();
-                                long end = Stopwatch.GetTimestamp();
-                                if (!operation.Verify())
-                                    Volatile.Write(ref nondeterministic, true);
-                                if (!builder.Add(Dataset(id), start, end))
-                                    return builder.Build();
-                            }
+                            var id = sampler.Next();
+                            operation.Prepare(id);
+                            long start = Stopwatch.GetTimestamp();
+                            operation.Execute();
+                            long end = Stopwatch.GetTimestamp();
+                            operation.Blackhole(hasher);
+                            if (!builder.Add(sampler.Dataset(id), start, end))
+                                return builder.Build(hasher.Compute());
                         }
                     };
                 });
-                if (Volatile.Read(ref nondeterministic))
-                    Pretty.Print("Non-deterministic algorithm.");
                 return TimingData.Sum(strata);
             });
         }

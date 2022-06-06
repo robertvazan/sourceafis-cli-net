@@ -14,7 +14,7 @@ namespace SourceAFIS.Cli.Inputs
             get
             {
                 var self = this;
-                return (from n in Enumerable.Range(0, Layout.Fingerprints) select new Fingerprint(self, n)).ToArray();
+                return (from n in Enumerable.Range(0, Layout.Fingerprints) select new Fingerprint(self, (ushort)n)).ToArray();
             }
         }
         public string Name => Code switch

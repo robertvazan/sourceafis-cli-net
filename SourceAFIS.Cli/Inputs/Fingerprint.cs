@@ -6,7 +6,7 @@ using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Inputs
 {
-    readonly record struct Fingerprint(Dataset Dataset, int Id) : DataIdentifier
+    readonly record struct Fingerprint(Dataset Dataset, ushort Id) : DataIdentifier
     {
         public string Name => Dataset.Layout.Name(Id);
         public string Path => System.IO.Path.Combine(Dataset.Path, Name);

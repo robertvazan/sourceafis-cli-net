@@ -4,7 +4,7 @@ using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Inputs
 {
-    readonly record struct FingerprintPair(Dataset Dataset, int ProbeId, int CandidateId) : DataIdentifier
+    readonly record struct FingerprintPair(Dataset Dataset, ushort ProbeId, ushort CandidateId) : DataIdentifier
     {
         public FingerprintPair(Fingerprint probe, Fingerprint candidate) : this(probe.Dataset, probe.Id, candidate.Id)
         {
