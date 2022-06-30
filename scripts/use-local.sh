@@ -8,4 +8,6 @@ rm -rf ~/.nuget/local
 mkdir -p ~/.nuget/local
 dotnet nuget push */bin/Release/*.nupkg -s ~/.nuget/local
 rm -rf ~/.nuget/packages/sourceafis
+cd `dirname $0`/..
+dotnet restore
 

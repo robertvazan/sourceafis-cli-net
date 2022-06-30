@@ -1,13 +1,14 @@
 // Part of SourceAFIS CLI for .NET: https://sourceafis.machinezoo.com/cli
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace SourceAFIS.Cli.Utils
 {
     class PrettyTable
     {
-        readonly List<string> columns;
-        readonly List<string> cells = new List<string>();
+        readonly List<string> columns = new();
+        readonly List<string> cells = new();
         public void Add(string column, string cell)
         {
             if (!columns.Contains(column))

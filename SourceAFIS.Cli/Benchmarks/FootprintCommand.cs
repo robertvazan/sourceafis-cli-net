@@ -19,7 +19,7 @@ namespace SourceAFIS.Cli.Benchmarks
             {
                 return new FootprintStats(
                     TemplateCache.Load(fp).Length,
-                    FootprintEstimates.Template(TemplateCache.Deserialize(fp)),
+                    TemplateCache.Deserialize(fp).Memory(),
                     ParsedTemplate.Parse(fp).Types.Length
                 );
             });
