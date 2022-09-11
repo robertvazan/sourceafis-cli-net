@@ -9,7 +9,7 @@ using SourceAFIS.Cli.Utils.Caching;
 
 namespace SourceAFIS.Cli.Logs
 {
-    abstract class TransparencyLog<K> : Command
+    abstract record TransparencyLogCommand<K> : Command
         where K : DataIdentifier
     {
         public abstract string Name { get; }
@@ -33,7 +33,7 @@ namespace SourceAFIS.Cli.Logs
         }
         protected void Log(string key, K id, int index, int count, string mime, Action action, CacheBatch batch)
         {
-            var collected = KeyDataCollector.Collect(key, action);
+            var collected = LogCollector.Collect(key, action);
             for (int i = 0; i < count; ++i)
             {
                 var raw = collected[i];
