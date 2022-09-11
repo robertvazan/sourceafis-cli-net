@@ -29,7 +29,7 @@ def documentation_links():
     yield 'SourceAFIS overview', 'https://sourceafis.machinezoo.com/'
 
 def dependencies():
-    use('SourceAFIS:3.13.0')
+    use('SourceAFIS:3.14.0')
     use('System.Net.Http:4.3.4')
 
 generate()
