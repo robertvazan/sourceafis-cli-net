@@ -6,6 +6,10 @@ using SourceAFIS.Cli.Logs;
 using SourceAFIS.Cli.Utils.Args;
 using SourceAFIS.Cli.Utils.Caching;
 
+// TODO: Directory cache from Java: no compression, cache-defining classes, commands as records, SimpleCommand, drop DataIdentifier.
+// TODO: MissingBaselineException from Java. Locate all references.
+// TODO: Transparency logging commands should take dataset parameter like in Java.
+// TODO: Parallelization like in Java.
 namespace SourceAFIS.Cli
 {
     class Program
